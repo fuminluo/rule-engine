@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.rule.engine.dao.ValueSetDao">
+
+    <resultMap type="com.github.rule.engine.entity.ValueSet" id="TValueSetMap">
+        <result property="id" column="ID" jdbcType="VARCHAR"/>
+        <result property="applicationId" column="APPLICATION_ID" jdbcType="VARCHAR"/>
+        <result property="valueCode" column="VALUE_CODE" jdbcType="VARCHAR"/>
+        <result property="dataType" column="DATA_TYPE" jdbcType="VARCHAR"/>
+        <result property="remarks" column="REMARKS" jdbcType="VARCHAR"/>
+        <result property="status" column="STATUS" jdbcType="OTHER"/>
+        <result property="dateTime" column="DATE_TIME" jdbcType="OTHER"/>
+        <result property="segmentName" column="SEGMENT_NAME" jdbcType="VARCHAR"/>
+        <result property="segmentCode" column="SEGMENT_CODE" jdbcType="VARCHAR"/>
+        <result property="valueParentCode" column="VALUE_PARENT_CODE" jdbcType="VARCHAR"/>
+        <result property="valueName" column="VALUE_NAME" jdbcType="OTHER"/>
+    </resultMap>
+
+
+
+</mapper>

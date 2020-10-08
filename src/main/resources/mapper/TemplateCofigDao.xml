@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.rule.engine.dao.TTemplateCofigDao">
+
+    <resultMap type="com.github.rule.engine.entity.TemplateCofig" id="TemplateCofigMap">
+        <result property="id" column="ID" jdbcType="OTHER"/>
+        <result property="segmentCode" column="SEGMENT_CODE" jdbcType="OTHER"/>
+        <result property="segmentName" column="SEGMENT_NAME" jdbcType="OTHER"/>
+        <result property="columnName" column="COLUMN_NAME" jdbcType="OTHER"/>
+        <result property="columnType" column="COLUMN_TYPE" jdbcType="OTHER"/>
+        <result property="isRequest" column="IS_REQUEST" jdbcType="OTHER"/>
+        <result property="remarks" column="REMARKS" jdbcType="OTHER"/>
+        <result property="templateId" column="TEMPLATE_ID" jdbcType="OTHER"/>
+        <result property="customSql" column="CUSTOM_SQL" jdbcType="OTHER"/>
+        <result property="segmentType" column="SEGMENT_TYPE" jdbcType="OTHER"/>
+        <result property="orderSort" column="ORDER_SORT" jdbcType="OTHER"/>
+        <result property="dateTime" column="DATE_TIME" jdbcType="OTHER"/>
+        <result property="status" column="STATUS" jdbcType="OTHER"/>
+        <result property="inOut" column="IN_OUT" jdbcType="OTHER"/>
+        <result property="isJoin" column="IS_JOIN" jdbcType="OTHER"/>
+        <result property="joinCode" column="JOIN_CODE" jdbcType="OTHER"/>
+    </resultMap>
+
+
+
+</mapper>
