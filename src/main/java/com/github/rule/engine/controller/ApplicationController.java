@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.api.ApiController;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.github.rule.engine.dto.ApplicationTreeView;
 import com.github.rule.engine.entity.Application;
 import com.github.rule.engine.service.ApplicationService;
 import com.github.rule.engine.utils.TreeNodeUtils;
@@ -30,8 +31,14 @@ public class ApplicationController extends ApiController {
     private ApplicationService applicationService;
 
 
-    public R<?> findTree() {
-        return null;
+    /**
+     * 获取应用数
+     *
+     * @return List<ApplicationTreeView>
+     */
+    @GetMapping("/tree")
+    public R<List<ApplicationTreeView>> findTree() {
+        return applicationService.findTree();
     }
 
     /**

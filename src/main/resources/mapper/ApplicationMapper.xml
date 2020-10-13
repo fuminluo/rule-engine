@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.rule.engine.mapper.ApplicationMapper">
+
+    <resultMap type="com.github.rule.engine.entity.Application" id="TApplicationMap">
+        <result property="id" column="ID" jdbcType="VARCHAR"/>
+        <result property="applicationName" column="APPLICATION_NAME" jdbcType="VARCHAR"/>
+        <result property="applicationCode" column="APPLICATION_CODE" jdbcType="VARCHAR"/>
+        <result property="remarks" column="REMARKS" jdbcType="VARCHAR"/>
+        <result property="dateTime" column="DATE_TIME" jdbcType="OTHER"/>
+        <result property="status" column="STATUS" jdbcType="OTHER"/>
+        <result property="parentId" column="PARENT_ID" jdbcType="VARCHAR"/>
+        <result property="rootId" column="ROOT_ID" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="findTree" resultType="com.github.rule.engine.dto.ApplicationTreeView">
+         SELECT t.id,
+                t.parent_id as parentId,
+                t.application_name AS label,
+                t.application_code AS value,
+                level
+            FROM t_application t
+            where t.status = '1'
+                START WITH t.parent_id = '0'
+                CONNECT BY t.parent_id = PRIOR t.id
+                ORDER BY order_sort
+    </select>
+
+
+</mapper>

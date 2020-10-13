@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.rule.engine.mapper.ObjectDataMapper">
+
+    <resultMap type="com.github.rule.engine.entity.ObjectData" id="BaseResultMap">
+        <result property="id" column="ID" jdbcType="OTHER"/>
+        <result property="columnChar1" column="COLUMN_CHAR1" jdbcType="OTHER"/>
+        <result property="columnChar2" column="COLUMN_CHAR2" jdbcType="OTHER"/>
+        <result property="columnChar3" column="COLUMN_CHAR3" jdbcType="OTHER"/>
+        <result property="columnChar4" column="COLUMN_CHAR4" jdbcType="OTHER"/>
+        <result property="columnChar5" column="COLUMN_CHAR5" jdbcType="OTHER"/>
+        <result property="columnChar6" column="COLUMN_CHAR6" jdbcType="OTHER"/>
+        <result property="columnChar7" column="COLUMN_CHAR7" jdbcType="OTHER"/>
+        <result property="columnChar8" column="COLUMN_CHAR8" jdbcType="OTHER"/>
+        <result property="columnChar9" column="COLUMN_CHAR9" jdbcType="OTHER"/>
+        <result property="columnChar10" column="COLUMN_CHAR10" jdbcType="OTHER"/>
+        <result property="columnChar11" column="COLUMN_CHAR11" jdbcType="OTHER"/>
+        <result property="columnChar12" column="COLUMN_CHAR12" jdbcType="OTHER"/>
+        <result property="columnChar13" column="COLUMN_CHAR13" jdbcType="OTHER"/>
+        <result property="columnChar14" column="COLUMN_CHAR14" jdbcType="OTHER"/>
+        <result property="columnChar15" column="COLUMN_CHAR15" jdbcType="OTHER"/>
+        <result property="columnNumber1" column="COLUMN_NUMBER1" jdbcType="OTHER"/>
+        <result property="columnNumber2" column="COLUMN_NUMBER2" jdbcType="OTHER"/>
+        <result property="columnNumber3" column="COLUMN_NUMBER3" jdbcType="OTHER"/>
+        <result property="columnNumber4" column="COLUMN_NUMBER4" jdbcType="OTHER"/>
+        <result property="columnNumber5" column="COLUMN_NUMBER5" jdbcType="OTHER"/>
+        <result property="columnNumber6" column="COLUMN_NUMBER6" jdbcType="OTHER"/>
+        <result property="columnDate1" column="COLUMN_DATE1" jdbcType="OTHER"/>
+        <result property="columnDate2" column="COLUMN_DATE2" jdbcType="OTHER"/>
+        <result property="columnDate3" column="COLUMN_DATE3" jdbcType="OTHER"/>
+        <result property="columnDate4" column="COLUMN_DATE4" jdbcType="OTHER"/>
+        <result property="hashCode" column="HASH_CODE" jdbcType="OTHER"/>
+        <result property="applicationId" column="APPLICATION_ID" jdbcType="OTHER"/>
+
+    </resultMap>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="BaseResultMap">
+        select
+        ID, COLUMN_CHAR1, COLUMN_CHAR2, COLUMN_CHAR3, COLUMN_CHAR4, COLUMN_CHAR5, COLUMN_CHAR6, COLUMN_CHAR7,
+        COLUMN_CHAR8, COLUMN_CHAR9, COLUMN_CHAR10, COLUMN_CHAR11, COLUMN_CHAR12, COLUMN_CHAR13, COLUMN_CHAR14,
+        COLUMN_CHAR15, COLUMN_NUMBER1, COLUMN_NUMBER2, COLUMN_NUMBER3, COLUMN_NUMBER4, COLUMN_NUMBER5, COLUMN_NUMBER6,
+        COLUMN_DATE1, COLUMN_DATE2, COLUMN_DATE3, COLUMN_DATE4, HASH_CODE, APPLICATION_ID
+        from ROOT.T_OBJECT_DATA
+        <where>
+            <if test="id != null">
+                and ID = #{id}
+            </if>
+            <if test="columnChar1 != null">
+                and COLUMN_CHAR1 = #{columnChar1}
+            </if>
+            <if test="columnChar2 != null">
+                and COLUMN_CHAR2 = #{columnChar2}
+            </if>
+            <if test="columnChar3 != null">
+                and COLUMN_CHAR3 = #{columnChar3}
+            </if>
+            <if test="columnChar4 != null">
+                and COLUMN_CHAR4 = #{columnChar4}
+            </if>
+            <if test="columnChar5 != null">
+                and COLUMN_CHAR5 = #{columnChar5}
+            </if>
+            <if test="columnChar6 != null">
+                and COLUMN_CHAR6 = #{columnChar6}
+            </if>
+            <if test="columnChar7 != null">
+                and COLUMN_CHAR7 = #{columnChar7}
+            </if>
+            <if test="columnChar8 != null">
+                and COLUMN_CHAR8 = #{columnChar8}
+            </if>
+            <if test="columnChar9 != null">
+                and COLUMN_CHAR9 = #{columnChar9}
+            </if>
+            <if test="columnChar10 != null">
+                and COLUMN_CHAR10 = #{columnChar10}
+            </if>
+            <if test="columnChar11 != null">
+                and COLUMN_CHAR11 = #{columnChar11}
+            </if>
+            <if test="columnChar12 != null">
+                and COLUMN_CHAR12 = #{columnChar12}
+            </if>
+            <if test="columnChar13 != null">
+                and COLUMN_CHAR13 = #{columnChar13}
+            </if>
+            <if test="columnChar14 != null">
+                and COLUMN_CHAR14 = #{columnChar14}
+            </if>
+            <if test="columnChar15 != null">
+                and COLUMN_CHAR15 = #{columnChar15}
+            </if>
+            <if test="columnNumber1 != null">
+                and COLUMN_NUMBER1 = #{columnNumber1}
+            </if>
+            <if test="columnNumber2 != null">
+                and COLUMN_NUMBER2 = #{columnNumber2}
+            </if>
+            <if test="columnNumber3 != null">
+                and COLUMN_NUMBER3 = #{columnNumber3}
+            </if>
+            <if test="columnNumber4 != null">
+                and COLUMN_NUMBER4 = #{columnNumber4}
+            </if>
+            <if test="columnNumber5 != null">
+                and COLUMN_NUMBER5 = #{columnNumber5}
+            </if>
+            <if test="columnNumber6 != null">
+                and COLUMN_NUMBER6 = #{columnNumber6}
+            </if>
+            <if test="columnDate1 != null">
+                and COLUMN_DATE1 = #{columnDate1}
+            </if>
+            <if test="columnDate2 != null">
+                and COLUMN_DATE2 = #{columnDate2}
+            </if>
+            <if test="columnDate3 != null">
+                and COLUMN_DATE3 = #{columnDate3}
+            </if>
+            <if test="columnDate4 != null">
+                and COLUMN_DATE4 = #{columnDate4}
+            </if>
+            <if test="hashCode != null">
+                and HASH_CODE = #{hashCode}
+            </if>
+            <if test="applicationId != null">
+                and APPLICATION_ID = #{applicationId}
+            </if>
+        </where>
+    </select>
+
+    <select id="findOne" resultMap="BaseResultMap"
+            parameterType="com.github.rule.engine.dto.ObjectDataDTO">
+        with temp as (select
+        ora_hash(t.application_id || t.column_char1 || t.column_char2 || t.column_char3 ||
+        t.column_char4 || t.column_char5 || t.column_char6 ||
+        t.column_char7 || t.column_char8 || t.column_char9 ||
+        t.column_char10 || t.column_char11 || t.column_char12 ||
+        t.column_char13 || t.column_char14 || t.column_char15
+        || t.column_number1 || t.column_number2 || t.column_number3
+        || t.column_number4 || t.column_number5 || t.column_number6) as hashcode from
+        (select #{applicationId,jdbcType=NVARCHAR} APPLICATION_ID, #{columnChar1,jdbcType=NVARCHAR} COLUMN_CHAR1,
+        #{columnChar2,jdbcType=NVARCHAR} COLUMN_CHAR2,#{columnChar3,jdbcType=NVARCHAR}
+        COLUMN_CHAR3,#{columnChar4,jdbcType=NVARCHAR} COLUMN_CHAR4,
+        #{columnChar5,jdbcType=NVARCHAR} COLUMN_CHAR5,#{columnChar6,jdbcType=NVARCHAR}
+        COLUMN_CHAR6,#{columnChar7,jdbcType=NVARCHAR} COLUMN_CHAR7,
+        #{columnChar8,jdbcType=NVARCHAR} COLUMN_CHAR8,#{columnChar9,jdbcType=NVARCHAR}
+        COLUMN_CHAR9,#{columnChar10,jdbcType=NVARCHAR} COLUMN_CHAR10,
+        #{columnChar11,jdbcType=NVARCHAR} COLUMN_CHAR11,#{columnChar12,jdbcType=NVARCHAR}
+        COLUMN_CHAR12,#{columnChar13,jdbcType=NVARCHAR} COLUMN_CHAR13,
+        #{columnChar14,jdbcType=NVARCHAR} COLUMN_CHAR14,#{columnChar15,jdbcType=NVARCHAR} COLUMN_CHAR15,
+        #{columnNumber1,jdbcType=DOUBLE} column_number1,#{columnNumber2,jdbcType=DOUBLE}
+        column_number2,#{columnNumber3,jdbcType=DOUBLE} column_number3,
+        #{columnNumber4,jdbcType=DOUBLE} column_number4,#{columnNumber5,jdbcType=DOUBLE}
+        column_number5,#{columnNumber6,jdbcType=DOUBLE} column_number6
+        from dual) t )
+        select
+        ID, COLUMN_CHAR1, COLUMN_CHAR2, COLUMN_CHAR3, COLUMN_CHAR4, COLUMN_CHAR5, COLUMN_CHAR6, COLUMN_CHAR7,
+        COLUMN_CHAR8, COLUMN_CHAR9, COLUMN_CHAR10, COLUMN_CHAR11, COLUMN_CHAR12, COLUMN_CHAR13, COLUMN_CHAR14,
+        COLUMN_CHAR15, COLUMN_NUMBER1, COLUMN_NUMBER2, COLUMN_NUMBER3, COLUMN_NUMBER4, COLUMN_NUMBER5, COLUMN_NUMBER6,
+        COLUMN_DATE1, COLUMN_DATE2, COLUMN_DATE3, COLUMN_DATE4, HASH_CODE, APPLICATION_ID
+        from ROOT.T_OBJECT_DATA
+        where
+        HASH_CODE = (select temp.hashcode from temp)
+        <if test="applicationId != null">
+            and APPLICATION_ID = #{applicationId}
+        </if>
+        <if test="columnChar1 != null">
+            and COLUMN_CHAR1 = #{columnChar1}
+        </if>
+        <if test="columnChar2 != null">
+            and COLUMN_CHAR2 = #{columnChar2}
+        </if>
+        <if test="columnChar3 != null">
+            and COLUMN_CHAR3 = #{columnChar3}
+        </if>
+        <if test="columnChar4 != null">
+            and COLUMN_CHAR4 = #{columnChar4}
+        </if>
+        <if test="columnChar5 != null">
+            and COLUMN_CHAR5 = #{columnChar5}
+        </if>
+        <if test="columnChar6 != null">
+            and COLUMN_CHAR6 = #{columnChar6}
+        </if>
+        <if test="columnChar7 != null">
+            and COLUMN_CHAR7 = #{columnChar7}
+        </if>
+        <if test="columnChar8 != null">
+            and COLUMN_CHAR8 = #{columnChar8}
+        </if>
+        <if test="columnChar9 != null">
+            and COLUMN_CHAR9 = #{columnChar9}
+        </if>
+        <if test="columnChar10 != null">
+            and COLUMN_CHAR10 = #{columnChar10}
+        </if>
+        <if test="columnChar11 != null">
+            and COLUMN_CHAR11 = #{columnChar11}
+        </if>
+        <if test="columnChar12 != null">
+            and COLUMN_CHAR12 = #{columnChar12}
+        </if>
+        <if test="columnChar13 != null">
+            and COLUMN_CHAR13 = #{columnChar13}
+        </if>
+        <if test="columnChar14 != null">
+            and COLUMN_CHAR14 = #{columnChar14}
+        </if>
+        <if test="columnChar15 != null">
+            and COLUMN_CHAR15 = #{columnChar15}
+        </if>
+        <if test="columnNumber1 != null">
+            and COLUMN_NUMBER1 = #{columnNumber1}
+        </if>
+        <if test="columnNumber2 != null">
+            and COLUMN_NUMBER2 = #{columnNumber2}
+        </if>
+        <if test="columnNumber3 != null">
+            and COLUMN_NUMBER3 = #{columnNumber3}
+        </if>
+        <if test="columnNumber4 != null">
+            and COLUMN_NUMBER4 = #{columnNumber4}
+        </if>
+        <if test="columnNumber5 != null">
+            and COLUMN_NUMBER5 = #{columnNumber5}
+        </if>
+        <if test="columnNumber6 != null">
+            and COLUMN_NUMBER6 = #{columnNumber6}
+        </if>
+        <if test="columnDate1 != null">
+            and COLUMN_DATE1 = #{columnDate1}
+        </if>
+        <if test="columnDate2 != null">
+            and COLUMN_DATE2 = #{columnDate2}
+        </if>
+        <if test="columnDate3 != null">
+            and COLUMN_DATE3 = #{columnDate3}
+        </if>
+        <if test="columnDate4 != null">
+            and COLUMN_DATE4 = #{columnDate4}
+        </if>
+    </select>
+
+    <select id="queryCustom" resultMap="BaseResultMap">
+        select * from t_object_data
+         where hash_code = #{hashCode} and application_id = #{applicationId}
+        <if test="sqlPart != null">
+            ${sqlPart}
+        </if>
+        and rownum = 1
+    </select>
+
+    <select id="queryHashCode" parameterType="com.github.rule.engine.dto.ObjectDataDTO" resultType="java.lang.Long">
+        select
+            ora_hash(t.application_id || t.column_char1 || t.column_char2 || t.column_char3 ||
+            t.column_char4 || t.column_char5 || t.column_char6 ||
+            t.column_char7 || t.column_char8 || t.column_char9 ||
+            t.column_char10 || t.column_char11 || t.column_char12 ||
+            t.column_char13 || t.column_char14 || t.column_char15
+            || t.column_number1 || t.column_number2 || t.column_number3
+            || t.column_number4 || t.column_number5 || t.column_number6) as hashcode from
+            (select #{applicationId,jdbcType=NVARCHAR} APPLICATION_ID, #{columnChar1,jdbcType=NVARCHAR} COLUMN_CHAR1,
+            #{columnChar2,jdbcType=NVARCHAR} COLUMN_CHAR2,#{columnChar3,jdbcType=NVARCHAR}
+            COLUMN_CHAR3,#{columnChar4,jdbcType=NVARCHAR} COLUMN_CHAR4,
+            #{columnChar5,jdbcType=NVARCHAR} COLUMN_CHAR5,#{columnChar6,jdbcType=NVARCHAR}
+            COLUMN_CHAR6,#{columnChar7,jdbcType=NVARCHAR} COLUMN_CHAR7,
+            #{columnChar8,jdbcType=NVARCHAR} COLUMN_CHAR8,#{columnChar9,jdbcType=NVARCHAR}
+            COLUMN_CHAR9,#{columnChar10,jdbcType=NVARCHAR} COLUMN_CHAR10,
+            #{columnChar11,jdbcType=NVARCHAR} COLUMN_CHAR11,#{columnChar12,jdbcType=NVARCHAR}
+            COLUMN_CHAR12,#{columnChar13,jdbcType=NVARCHAR} COLUMN_CHAR13,
+            #{columnChar14,jdbcType=NVARCHAR} COLUMN_CHAR14,#{columnChar15,jdbcType=NVARCHAR} COLUMN_CHAR15,
+            #{columnNumber1,jdbcType=DOUBLE} column_number1,#{columnNumber2,jdbcType=DOUBLE}
+            column_number2,#{columnNumber3,jdbcType=DOUBLE} column_number3,
+            #{columnNumber4,jdbcType=DOUBLE} column_number4,#{columnNumber5,jdbcType=DOUBLE}
+            column_number5,#{columnNumber6,jdbcType=DOUBLE} column_number6
+        from dual) t
+    </select>
+
+</mapper>

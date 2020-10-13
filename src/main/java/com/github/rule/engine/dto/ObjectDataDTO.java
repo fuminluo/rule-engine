@@ -1,35 +1,25 @@
-package com.github.rule.engine.entity;
+package com.github.rule.engine.dto;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-
 /**
- * (TStringData)表实体类
- *
- * @author makejava
- * @since 2020-10-08 19:06:56
+ * @Author admin
+ * @DATE 2020/10/12 9:42
  */
 @Data
 @ToString
-@EqualsAndHashCode
-@SuppressWarnings("serial")
-@TableName(value = "t_object_data")
-public class ObjectData extends Model<ObjectData> {
+public class ObjectDataDTO implements Serializable {
 
-    private String id;
-
-    private String hashCode;
+    private static final long serialVersionUID = -6112853584961609956L;
 
     private String applicationId;
+
+    private Long hashCode;
 
     private String columnChar1;
 
@@ -80,6 +70,4 @@ public class ObjectData extends Model<ObjectData> {
     private LocalDate columnDate3;
 
     private LocalDate columnDate4;
-
-
 }

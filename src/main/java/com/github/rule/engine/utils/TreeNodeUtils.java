@@ -1,7 +1,7 @@
 package com.github.rule.engine.utils;
 
 
-import com.github.rule.engine.dto.BaseTreeNode;
+import com.github.rule.engine.base.BaseTreeNode;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -17,6 +17,8 @@ import java.util.stream.Collectors;
  */
 public class TreeNodeUtils {
 
+    public static final String PARENT = "0";
+
 
     /**
      * 两层循环实现建树
@@ -30,11 +32,11 @@ public class TreeNodeUtils {
             return new ArrayList<>();
         }
         for (T treeNode : treeNodes) {
-            if (parentId.equals(treeNode.getPId())) {
+            if (parentId.equals(treeNode.getParentId())) {
                 trees.add(treeNode);
             }
             for (T it : treeNodes) {
-                if (it.getPId().equals(treeNode.getId())) {
+                if (it.getParentId().equals(treeNode.getId())) {
                     if (treeNode.getChildren() == null) {
                         treeNode.setChildren(new ArrayList<>());
                     }
@@ -69,9 +71,9 @@ public class TreeNodeUtils {
             if (id.equals(t.getId()) && nodeIndex[i] == 0) {
                 nodeIndex[i] = 1;
                 treeNodes.add(t);
-                id = t.getPId();
+                id = t.getParentId();
                 // 父主键为空,null,"0",结束循环
-                if (StringUtils.isEmpty(id) || "null".equals(id) || "0".equals(id)) {
+                if (StringUtils.isEmpty(id) || "null".equals(id) || PARENT.equals(id)) {
                     break;
                 }
                 i = -1;
@@ -134,7 +136,7 @@ public class TreeNodeUtils {
             if (!StringUtils.isEmpty(tempId)) {
                 for (int i = 0; i < length; i++) {
                     t = listNodes.get(i);
-                    if (tempId.equals(t.getPId()) && nodeIndex[i] == 0) {
+                    if (tempId.equals(t.getParentId()) && nodeIndex[i] == 0) {
                         nodeIndex[i] = 1;
                         treeNodes.add(t);
                     }
@@ -155,7 +157,7 @@ public class TreeNodeUtils {
         // 循环赋值最上面的节点数据
         // 赋值最上面节点的值
         newTreeNodes.addAll(listNodes.stream()
-                .filter(t -> StringUtils.isEmpty(t.getPId()) || "null".equals(t.getPId()) || "0".equals(t.getPId()))
+                .filter(t -> StringUtils.isEmpty(t.getParentId()) || "null".equals(t.getParentId()) || PARENT.equals(t.getParentId()))
                 .collect(Collectors.toList()));
         // 循环处理子节点数据
         for (T t : newTreeNodes) {
@@ -196,7 +198,7 @@ public class TreeNodeUtils {
     static <T extends BaseTreeNode> void assembleTree(T node, List<T> listNodes) {
         if (node != null && !CollectionUtils.isEmpty(listNodes)) {
             // 循环节点数据，如果是子节点则添加起来
-            listNodes.stream().filter(t -> Objects.equals(t.getPId(), node.getId())).forEachOrdered(node::addChildren);
+            listNodes.stream().filter(t -> Objects.equals(t.getParentId(), node.getId())).forEachOrdered(node::addChildren);
             // 循环处理子节点数据,递归
             if (!CollectionUtils.isEmpty(node.getChildren())) {
                 for (Object t : node.getChildren()) {

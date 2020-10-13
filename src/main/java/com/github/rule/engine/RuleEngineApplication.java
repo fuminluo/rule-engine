@@ -8,11 +8,17 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+/**
+ * @author admin
+ */
 @SpringBootApplication
-@MapperScan("com.github.rule.engine.dao")
+@MapperScan("com.github.rule.engine.mapper")
 public class RuleEngineApplication {
 
 
+    /**
+     * 跨域配置
+     */
     @Bean
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

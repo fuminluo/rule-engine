@@ -5,13 +5,16 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.api.ApiController;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.github.rule.engine.dto.ExecuteRequest;
 import com.github.rule.engine.entity.ObjectData;
-import com.github.rule.engine.service.TObjectDataService;
+import com.github.rule.engine.service.ObjectDataService;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.io.Serializable;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * (TObjectData)表控制层
@@ -20,24 +23,30 @@ import java.util.List;
  * @since 2020-10-08 19:06:57
  */
 @RestController
-@RequestMapping("tObjectData")
+@RequestMapping("objectData")
 public class ObjectDataController extends ApiController {
     /**
      * 服务对象
      */
     @Resource
-    private TObjectDataService tObjectDataService;
+    private ObjectDataService objectDataService;
+
+    @PostMapping("/execute")
+    public R execute(@RequestBody @Validated ExecuteRequest executeRequest) throws NoSuchFieldException, IllegalAccessException {
+        return objectDataService.execute(executeRequest);
+
+    }
 
     /**
      * 分页查询所有数据
      *
-     * @param page        分页对象
+     * @param page       分页对象
      * @param objectData 查询实体
      * @return 所有数据
      */
     @GetMapping
     public R selectAll(Page<ObjectData> page, ObjectData objectData) {
-        return success(this.tObjectDataService.page(page, new QueryWrapper<>(objectData)));
+        return success(this.objectDataService.page(page, new QueryWrapper<>(objectData)));
     }
 
     /**
@@ -48,7 +57,7 @@ public class ObjectDataController extends ApiController {
      */
     @GetMapping("{id}")
     public R selectOne(@PathVariable Serializable id) {
-        return success(this.tObjectDataService.getById(id));
+        return success(this.objectDataService.getById(id));
     }
 
     /**
@@ -59,7 +68,8 @@ public class ObjectDataController extends ApiController {
      */
     @PostMapping
     public R insert(@RequestBody ObjectData objectData) {
-        return success(this.tObjectDataService.save(objectData));
+        objectData.setId(UUID.randomUUID().toString().replace("-", ""));
+        return success(this.objectDataService.save(objectData));
     }
 
     /**
@@ -70,7 +80,7 @@ public class ObjectDataController extends ApiController {
      */
     @PutMapping
     public R update(@RequestBody ObjectData objectData) {
-        return success(this.tObjectDataService.updateById(objectData));
+        return success(this.objectDataService.updateById(objectData));
     }
 
     /**
@@ -81,6 +91,6 @@ public class ObjectDataController extends ApiController {
      */
     @DeleteMapping
     public R delete(@RequestParam("idList") List<Long> idList) {
-        return success(this.tObjectDataService.removeByIds(idList));
+        return success(this.objectDataService.removeByIds(idList));
     }
 }
