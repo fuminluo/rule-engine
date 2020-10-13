@@ -1,6 +1,9 @@
 package com.github.rule.engine.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.github.rule.engine.dto.ApplicationTableDTO;
 import com.github.rule.engine.dto.ApplicationTreeView;
 import com.github.rule.engine.entity.Application;
 import org.apache.ibatis.annotations.Mapper;
@@ -18,4 +21,5 @@ public interface ApplicationMapper extends BaseMapper<Application> {
 
     List<ApplicationTreeView> findTree();
 
+    IPage<ApplicationTableDTO> findTable(Page<?> page);
 }

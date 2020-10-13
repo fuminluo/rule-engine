@@ -1,7 +1,9 @@
 package com.github.rule.engine.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.github.rule.engine.dto.ApplicationTableDTO;
 import com.github.rule.engine.dto.ApplicationTreeView;
 import com.github.rule.engine.entity.Application;
 
@@ -15,5 +17,8 @@ import java.util.List;
  */
 public interface ApplicationService extends IService<Application> {
 
-    R<List<ApplicationTreeView>> findTree();
+    List<ApplicationTreeView> findTree();
+
+
+    IPage<ApplicationTableDTO> findTable(Integer currentPage, Integer pageSize);
 }

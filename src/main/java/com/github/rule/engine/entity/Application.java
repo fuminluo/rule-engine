@@ -19,32 +19,41 @@ import java.time.LocalDate;
 @SuppressWarnings("serial")
 @TableName(value = "t_application")
 public class Application extends Model<Application> {
-    //应用id
-    @TableId(type = IdType.UUID)
-    private String id;
-    //应用名称
-    private String applicationName;
-    //应用编码
-    private String applicationCode;
-    //备注
-    private String remarks;
-    //时间戳
-    private LocalDate dateTime;
-    //0-禁用,1-启用
-    private String status;
-    //父id
-    private String parentId;
-    //根id
-    private String rootId;
-
     /**
-     * 获取主键值
-     *
-     * @return 主键值
+     * 应用id
      */
-    @Override
-    protected Serializable pkVal() {
-        return this.id;
-    }
+    private String id;
+    /**
+     * 应用名称
+     */
+    private String applicationName;
+    /**
+     * 应用编码
+     */
+    private String applicationCode;
+    /**
+     * 备注
+     */
+    private String remarks;
+    /**
+     * 时间戳
+     */
+    private LocalDate dateTime;
+    /**
+     * 0-禁用,1-启用
+     */
+    private String status;
+    /**
+     * 父id
+     */
+    private String parentId;
+    /**
+     * 根id
+     */
+    private String rootId;
+    /**
+     * 排序
+     */
+    private Integer orderSort;
 
 }

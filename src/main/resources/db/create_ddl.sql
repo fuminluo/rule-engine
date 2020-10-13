@@ -4,12 +4,12 @@ create table T_APPLICATION
     id               NVARCHAR2(32) not null,
     application_name NVARCHAR2(64) not null,
     application_code NVARCHAR2(32) not null,
-    remarks          NVARCHAR2(255),
     date_time        TIMESTAMP(6),
-    status           NVARCHAR2(1) default 1 not null,
+    order_sort       NUMBER,
     parent_id        NVARCHAR2(32) not null,
     root_id          NVARCHAR2(32) not null,
-    order_sort       NUMBER
+    remarks          NVARCHAR2(255),
+    status           NVARCHAR2(1) default 1 not null
 )
     tablespace USERS
     pctfree 10
@@ -69,6 +69,7 @@ create unique index UK_APP_APPLICATION_CODE on T_APPLICATION (APPLICATION_CODE)
     minextents 1
     maxextents unlimited
     );
+
 -- Create/Recreate primary, unique and foreign key constraints
 alter table T_APPLICATION
     add constraint PK_APPLICATION_ID primary key (ID)
@@ -89,24 +90,25 @@ alter table T_APPLICATION
 create table T_APPLICATION_TEMPLATE
 (
     id             NVARCHAR2(32) not null,
+    application_id NVARCHAR2(32),
     segment_code   NVARCHAR2(32) not null,
     segment_name   NVARCHAR2(64) not null,
+    segment_type   NVARCHAR2(32) not null,
+    field_name     NVARCHAR2(32),
+    field_type     NVARCHAR2(32),
     column_name    NVARCHAR2(32) not null,
     column_type    NVARCHAR2(32) not null,
+    arithmetic     NVARCHAR2(32),
     is_request     NVARCHAR2(1) not null,
-    remarks        NVARCHAR2(255),
     custom_sql     NVARCHAR2(1000),
-    segment_type   NVARCHAR2(32) not null,
     order_sort     NUMBER,
-    date_time      TIMESTAMP(6),
-    status         NVARCHAR2(1) default 1,
     in_out         NVARCHAR2(8) default 'IN' not null,
     is_join        NVARCHAR2(1) default 'N' not null,
     join_code      NVARCHAR2(32),
-    application_id NVARCHAR2(32),
-    field_name     NVARCHAR2(32),
-    field_type     NVARCHAR2(32),
-    arithmetic     NVARCHAR2(32)
+    date_time      TIMESTAMP(6),
+    remarks        NVARCHAR2(255),
+    status         NVARCHAR2(1) default 1
+
 )
     tablespace USERS
     pctfree 10
@@ -206,6 +208,8 @@ alter table T_APPLICATION_TEMPLATE
 create table T_OBJECT_DATA
 (
     id             NVARCHAR2(32) not null,
+    application_id NVARCHAR2(32) not null,
+    hash_code      NUMBER not null,
     column_char1   NVARCHAR2(255),
     column_char2   NVARCHAR2(255),
     column_char3   NVARCHAR2(255),
@@ -230,9 +234,7 @@ create table T_OBJECT_DATA
     column_date1   TIMESTAMP(6),
     column_date2   TIMESTAMP(6),
     column_date3   TIMESTAMP(6),
-    column_date4   TIMESTAMP(6),
-    hash_code      NUMBER not null,
-    application_id NVARCHAR2(32) not null
+    column_date4   TIMESTAMP(6)
 )
     tablespace USERS
     pctfree 10
@@ -278,15 +280,15 @@ create table T_VALUE_SET
 (
     id                NVARCHAR2(32) not null,
     application_id    NVARCHAR2(32) not null,
-    value_code        NVARCHAR2(255) not null,
-    data_type         NVARCHAR2(32) not null,
-    remarks           NVARCHAR2(255),
-    status            NVARCHAR2(1) default 1 not null,
-    date_time         TIMESTAMP(6),
     segment_name      NVARCHAR2(32),
     segment_code      NVARCHAR2(64),
+    value_code        NVARCHAR2(255) not null,
+    value_name        NVARCHAR2(255),
+    data_type         NVARCHAR2(32) not null,
     value_parent_code NVARCHAR2(64),
-    value_name        NVARCHAR2(255)
+    date_time         TIMESTAMP(6),
+    remarks           NVARCHAR2(255),
+    status            NVARCHAR2(1) default 1 not null
 )
     tablespace USERS
     pctfree 10
