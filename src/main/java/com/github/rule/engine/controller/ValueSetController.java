@@ -1,13 +1,14 @@
 package com.github.rule.engine.controller;
 
-import com.github.rule.engine.entity.ValueSet;
+import com.baomidou.mybatisplus.extension.api.R;
+import com.github.rule.engine.dto.ValueSetRequest;
 import com.github.rule.engine.service.ValueSetService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * 值集表(TValueSet)表控制层
@@ -16,7 +17,7 @@ import java.util.List;
  * @since 2020-10-07 22:30:18
  */
 @RestController
-@RequestMapping("tValueSet")
+@RequestMapping("valueSet")
 public class ValueSetController {
     /**
      * 服务对象
@@ -24,15 +25,16 @@ public class ValueSetController {
     @Resource
     private ValueSetService valueSetService;
 
+
     /**
-     * 通过主键查询单条数据
+     * 值集接口
      *
-     * @param id 主键
-     * @return 单条数据
+     * @return
      */
-    @GetMapping("selectOne")
-    public List selectOne(String id) {
-        return valueSetService.list();
+    @GetMapping("/segment")
+    public R<?> findvalueSet(@ModelAttribute ValueSetRequest valueSetRequest) {
+
+        return valueSetService.findvalueSet(valueSetRequest);
     }
 
 }

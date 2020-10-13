@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.github.rule.engine.mapper.ValueSetMapper">
 
-    <resultMap type="com.github.rule.engine.entity.ValueSet" id="TValueSetMap">
+    <resultMap type="com.github.rule.engine.entity.ValueSet" id="BaseResultMap">
         <result property="id" column="ID" jdbcType="VARCHAR"/>
         <result property="applicationId" column="APPLICATION_ID" jdbcType="VARCHAR"/>
         <result property="valueCode" column="VALUE_CODE" jdbcType="VARCHAR"/>
@@ -16,6 +16,25 @@
         <result property="valueName" column="VALUE_NAME" jdbcType="OTHER"/>
     </resultMap>
 
+
+    <select id="findvalueSet" parameterType="com.github.rule.engine.dto.ValueSetRequest" resultMap="BaseResultMap">
+        SELECT
+        VALUE_CODE AS 'value' ,
+        VALUE_NAME AS label
+        FROM T_VALUE_SET
+        WHERE
+        status = '1'
+            <if test="applicationId != null">
+                and APPLICATION_ID = #{applicationId}
+            </if>
+            <if test="applicationId != null">
+                and SEGMENT_CODE = #{segmentCode}
+            </if>
+            <if test="applicationId != null">
+                and VALUE_PARENT_CODE = #{valueParentCode}
+            </if>
+
+    </select>
 
 
 </mapper>

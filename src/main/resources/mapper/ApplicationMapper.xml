@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.github.rule.engine.mapper.ApplicationMapper">
 
-    <resultMap type="com.github.rule.engine.entity.Application" id="TApplicationMap">
+    <resultMap type="com.github.rule.engine.entity.Application" id="BaseResultMap">
         <result property="id" column="ID" jdbcType="VARCHAR"/>
         <result property="applicationName" column="APPLICATION_NAME" jdbcType="VARCHAR"/>
         <result property="applicationCode" column="APPLICATION_CODE" jdbcType="VARCHAR"/>
