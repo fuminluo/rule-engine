@@ -2,12 +2,9 @@ package com.github.rule.engine.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.github.rule.engine.dto.ObjectDataDTO;
-import com.github.rule.engine.dto.SQLParagraphDTO;
 import com.github.rule.engine.entity.ObjectData;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-
-import java.util.List;
 
 /**
  * (TObjectData)表数据库访问层

@@ -42,38 +42,7 @@ public class ObjectDataServiceImpl extends ServiceImpl<ObjectDataMapper, ObjectD
 
     @Override
     public R execute(ExecuteRequest executeRequest) throws NoSuchFieldException, IllegalAccessException {
-        /*List<ApplicationTemplate> applicationTemplateList = applicationTemplateMapper.findListByApplicationCode(executeRequest.getApplicationCode());
-        if (CollectionUtils.isEmpty(applicationTemplateList)) {
-            return R.failed("未找到应用");
-        }
-        Map<String, String> inConfigMap = applicationTemplateList.stream().filter(var -> var.getInOut().equals(PutTypeEnum.IN.getValue())).collect(Collectors.toMap(ApplicationTemplate::getSegmentCode, ApplicationTemplate::getFieldName));
-        ObjectDataDTO objectDataDTO = new ObjectDataDTO();
-        Class objClass = objectDataDTO.getClass();
-        Map<String, Object> requestParam = executeRequest.getParam();
-        for (Map.Entry<String, String> entry : inConfigMap.entrySet()) {
-            Object obj = requestParam.get(entry.getKey());
-            Field field = objClass.getDeclaredField(entry.getValue());
-            field.setAccessible(true);
-            field.set(objectDataDTO, obj);
-        }
-        objectDataDTO.setApplicationId(applicationTemplateList.get(0).getApplicationId());
-        ObjectData objectData = objectDataMapper.findOne(objectDataDTO);
-        if (null == objectData) {
-            return R.failed("未击中规则");
-        }
-        Map<String, String> outConfigMap = applicationTemplateList.stream().filter(var ->
-                var.getInOut().equals(PutTypeEnum.OUT.getValue()) || var.getInOut().equals(PutTypeEnum.INOUT.getValue())
-        ).collect(Collectors.toMap(ApplicationTemplate::getSegmentCode, ApplicationTemplate::getFieldName));
-
-        Map<String, Object> result = new HashMap<>();
-        Class objectDataClass = objectData.getClass();
-        for (Map.Entry<String, String> entry : outConfigMap.entrySet()) {
-            Field field = objectDataClass.getDeclaredField(entry.getValue());
-            field.setAccessible(true);
-            Object value = field.get(objectData);
-            result.put(entry.getKey(), value);
-        }*/
-        DefaultExecuteObjectData defaultExecuteObjectData = new DefaultExecuteObjectData(executeRequest);
+        AbstractExecuteObjectData defaultExecuteObjectData = new DefaultExecuteObjectData(executeRequest);
         R result = defaultExecuteObjectData.doExecute();
         return result;
     }

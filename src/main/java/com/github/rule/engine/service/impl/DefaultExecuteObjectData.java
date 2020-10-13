@@ -2,7 +2,6 @@ package com.github.rule.engine.service.impl;
 
 import com.baomidou.mybatisplus.extension.api.R;
 import com.github.rule.engine.dto.ExecuteRequest;
-import com.github.rule.engine.dto.SQLParagraphDTO;
 import com.github.rule.engine.entity.ApplicationTemplate;
 import com.github.rule.engine.entity.ObjectData;
 import com.github.rule.engine.enums.PutTypeEnum;
@@ -12,7 +11,6 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +29,7 @@ public class DefaultExecuteObjectData extends AbstractExecuteObjectData {
     }
 
     @Override
-    protected R<?> doExecute() throws NoSuchFieldException, IllegalAccessException {
+    public R<?> doExecute() throws NoSuchFieldException, IllegalAccessException {
         applicationTemplates = super.applicationTemplateList;
         if (CollectionUtils.isEmpty(applicationTemplates)) {
             return R.failed("应用模板为空");

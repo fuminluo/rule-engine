@@ -1,3 +1,4 @@
+--触发器自动写入hash_code值（java代码实现有缺陷所以使用触发器）
 create or replace trigger save_hashcode
   before insert or update
   on t_object_data

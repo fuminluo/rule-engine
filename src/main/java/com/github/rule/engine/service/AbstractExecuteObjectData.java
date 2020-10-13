@@ -71,6 +71,6 @@ public abstract class AbstractExecuteObjectData {
      *
      * @return R
      */
-    protected abstract R<?> doExecute() throws NoSuchFieldException, IllegalAccessException;
+    public abstract R<?> doExecute() throws NoSuchFieldException, IllegalAccessException;
 
 }
