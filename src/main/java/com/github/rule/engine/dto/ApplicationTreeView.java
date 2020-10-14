@@ -3,6 +3,8 @@ package com.github.rule.engine.dto;
 import com.github.rule.engine.base.BaseTreeNode;
 import lombok.Data;
 
+import java.time.LocalDate;
+
 /**
  * @Author admin
  * @DATE 2020/10/9 9:44
@@ -11,12 +13,32 @@ import lombok.Data;
 public class ApplicationTreeView extends BaseTreeNode {
 
     /**
+     * 应用id
+     */
+    private String id;
+
+    /**
+     * 父id
+     */
+    private String parentId;
+
+    /**
      * 应用名称
      */
-    private String label;
+    private String applicationName;
 
     /**
      * 应用编码
      */
-    private String value;
+    private String applicationCode;
+
+    /**
+     * 时间
+     */
+    private LocalDate dateTime;
+
+    /**
+     * 状态
+     */
+    private String status;
 }

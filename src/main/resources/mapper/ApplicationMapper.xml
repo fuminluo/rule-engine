@@ -15,11 +15,12 @@
     </resultMap>
 
     <select id="findTree" resultType="com.github.rule.engine.dto.ApplicationTreeView">
-         SELECT t.id,
+         SELECT t.id,level,
                 t.parent_id as parentId,
-                t.application_name AS label,
-                t.application_code AS value,
-                level
+                t.application_name AS applicationName,
+                t.application_code AS applicationCode,
+                t.date_time AS  dateTime,
+                decode(t.status,'1','启用','2','禁用') AS status
             FROM t_application t
             where t.status = '1'
                 START WITH t.parent_id = '0'
