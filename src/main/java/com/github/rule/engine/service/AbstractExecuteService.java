@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.api.R;
 import com.github.rule.engine.dto.ExecuteRequest;
 import com.github.rule.engine.dto.ObjectDataDTO;
 import com.github.rule.engine.entity.ApplicationTemplate;
+import com.github.rule.engine.entity.ObjectData;
 import com.github.rule.engine.enums.PutTypeEnum;
 import com.github.rule.engine.mapper.ApplicationTemplateMapper;
 import com.github.rule.engine.mapper.ObjectDataMapper;
@@ -12,6 +13,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,7 +21,7 @@ import java.util.Map;
  * @Author admin
  * @DATE 2020/10/12 14:38
  */
-public abstract class AbstractExecuteObjectData {
+public abstract class AbstractExecuteService {
 
     protected ObjectDataMapper objectDataMapper = SpringContextUtils.getBean(ObjectDataMapper.class);
 
@@ -31,12 +33,18 @@ public abstract class AbstractExecuteObjectData {
 
     protected ExecuteRequest executeRequest;
 
-    public AbstractExecuteObjectData(ExecuteRequest executeRequest) throws NoSuchFieldException, IllegalAccessException {
+    public AbstractExecuteService(ExecuteRequest executeRequest) throws NoSuchFieldException, IllegalAccessException {
         this.executeRequest = executeRequest;
         convertToEntity();
         initHashCode();
     }
 
+    /**
+     * 入参数转成 dto
+     *
+     * @throws NoSuchFieldException
+     * @throws IllegalAccessException
+     */
     protected void convertToEntity() throws NoSuchFieldException, IllegalAccessException {
         Map<String, Object> requestParam = executeRequest.getParam();
         Class objClass = objectDataDTO.getClass();
@@ -59,11 +67,26 @@ public abstract class AbstractExecuteObjectData {
     }
 
     /**
-     * 实例化 hashCode
+     * 计算 hashCode
      */
     protected void initHashCode() {
         Long hashCode = objectDataMapper.queryHashCode(objectDataDTO);
         objectDataDTO.setHashCode(hashCode);
+    }
+
+    protected Map objectToResult(ObjectData objectData) throws NoSuchFieldException, IllegalAccessException {
+        Map<String, Object> result = new HashMap<>(12);
+        Class objectDataClass = objectData.getClass();
+        for (ApplicationTemplate appTemplate : applicationTemplateList) {
+            if (PutTypeEnum.OUT.getValue().equals(appTemplate.getInOut())
+                    || PutTypeEnum.INOUT.getValue().equals(appTemplate.getInOut())) {
+                Field field = objectDataClass.getDeclaredField(appTemplate.getFieldName());
+                field.setAccessible(true);
+                Object obj = field.get(objectData);
+                result.put(appTemplate.getSegmentCode(), obj);
+            }
+        }
+        return result;
     }
 
     /**

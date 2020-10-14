@@ -11,6 +11,7 @@
         <result property="status" column="STATUS" jdbcType="OTHER"/>
         <result property="parentId" column="PARENT_ID" jdbcType="VARCHAR"/>
         <result property="rootId" column="ROOT_ID" jdbcType="VARCHAR"/>
+        <result property="orderSort" column="ORDER_SORT" jdbcType="OTHER"/>
     </resultMap>
 
     <select id="findTree" resultType="com.github.rule.engine.dto.ApplicationTreeView">
@@ -24,6 +25,15 @@
                 START WITH t.parent_id = '0'
                 CONNECT BY t.parent_id = PRIOR t.id
                 ORDER BY order_sort
+    </select>
+    <select id="findTable" resultType="com.github.rule.engine.dto.ApplicationTableDTO">
+        SELECT app.id, app.remarks, app.date_time as dateTime,app.application_code as applicationCode,
+           lpad(' ', (level - 1) * 4, ' ') || app.application_name as applicationName,
+           connect_by_isleaf as isLeaf, --是否为叶子节点：1-是；0-否；
+           connect_by_root app.application_name as rootName --当前节点的根节点
+          FROM t_application app
+            start with app.parent_id = '0'
+            connect by prior app.id = app.parent_id order by app.order_sort
     </select>
 
 

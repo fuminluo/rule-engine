@@ -2,9 +2,11 @@ package com.github.rule.engine.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.api.ApiController;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.github.rule.engine.dto.ApplicationTableDTO;
 import com.github.rule.engine.dto.ApplicationTreeView;
 import com.github.rule.engine.entity.Application;
 import com.github.rule.engine.service.ApplicationService;
@@ -38,7 +40,18 @@ public class ApplicationController extends ApiController {
      */
     @GetMapping("/tree")
     public R<List<ApplicationTreeView>> findTree() {
-        return applicationService.findTree();
+        return R.ok(applicationService.findTree());
+    }
+
+    /**
+     * 获取应用数
+     *
+     * @return List<ApplicationTreeView>
+     */
+    @GetMapping("/table")
+    public R<IPage<ApplicationTableDTO>> findTable(@RequestParam(required = false, defaultValue = "1") Integer currentPage,
+                                                   @RequestParam(required = false, defaultValue = "10") Integer pageSize) {
+        return R.ok(applicationService.findTable(currentPage, pageSize));
     }
 
     /**

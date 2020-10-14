@@ -1,5 +1,6 @@
 package com.github.rule.engine;
 
+import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -33,6 +34,12 @@ public class RuleEngineApplication {
         corsConfiguration.addAllowedMethod("*");
         corsConfiguration.setAllowCredentials(true);
         return corsConfiguration;
+    }
+
+    @Bean
+    public PaginationInterceptor paginationInterceptor() {
+        PaginationInterceptor paginationInterceptor = new PaginationInterceptor();
+        return paginationInterceptor;
     }
 
     public static void main(String[] args) {

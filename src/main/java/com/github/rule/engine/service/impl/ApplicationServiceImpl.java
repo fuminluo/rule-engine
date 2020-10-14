@@ -1,7 +1,10 @@
 package com.github.rule.engine.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.api.R;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.rule.engine.dto.ApplicationTableDTO;
 import com.github.rule.engine.mapper.ApplicationMapper;
 import com.github.rule.engine.dto.ApplicationTreeView;
 import com.github.rule.engine.entity.Application;
@@ -25,8 +28,14 @@ public class ApplicationServiceImpl extends ServiceImpl<ApplicationMapper, Appli
     ApplicationMapper applicationMapper;
 
     @Override
-    public R<List<ApplicationTreeView>> findTree() {
+    public List<ApplicationTreeView> findTree() {
         List<ApplicationTreeView> treeList = applicationMapper.findTree();
-        return R.ok(TreeNodeUtils.bulid(treeList, TreeNodeUtils.PARENT));
+        return TreeNodeUtils.bulid(treeList, TreeNodeUtils.PARENT);
+    }
+
+    @Override
+    public IPage<ApplicationTableDTO> findTable(Integer currentPage, Integer pageSize) {
+        Page<ApplicationTableDTO> page = new Page<>(currentPage, pageSize);
+        return applicationMapper.findTable(page);
     }
 }

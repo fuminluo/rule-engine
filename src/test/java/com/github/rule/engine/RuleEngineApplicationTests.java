@@ -18,6 +18,12 @@ class RuleEngineApplicationTests {
     @Resource
     private ObjectDataService objectDataService;
 
+    /**
+     * 简单测试方法
+     *
+     * @throws NoSuchFieldException
+     * @throws IllegalAccessException
+     */
     @Test
     void contextLoads() throws NoSuchFieldException, IllegalAccessException {
         ExecuteRequest executeRequest = new ExecuteRequest();
