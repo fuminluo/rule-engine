@@ -1,5 +1,6 @@
 package com.github.rule.engine.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.github.rule.engine.dto.ExecuteRequest;
 import com.github.rule.engine.entity.ApplicationTemplate;
@@ -33,23 +34,23 @@ public class DefaultExecuteServiceImpl extends AbstractExecuteService {
             return R.failed("应用模板为空");
         }
         Map<String, Object> requestParam = executeRequest.getParam();
-        StringBuilder sqlPart = new StringBuilder();
+        QueryWrapper<ObjectData> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("hash_code", objectDataDTO.getHashCode());
+        queryWrapper.eq( "application_id", objectDataDTO.getApplicationId());
         for (ApplicationTemplate appTemplate : applicationTemplates) {
             if (PutTypeEnum.IN.getValue().equals(appTemplate.getInOut())
-                    || PutTypeEnum.INOUT.getValue().equals(appTemplate.getInOut())
-            ) {
+                    || PutTypeEnum.INOUT.getValue().equals(appTemplate.getInOut())) {
                 Object fieldValue = requestParam.get(appTemplate.getSegmentCode());
-                sqlPart.append(" and ");
-                sqlPart.append(appTemplate.getColumnName()).append(" ");
-                sqlPart.append(appTemplate.getArithmetic()).append(" ");
-                sqlPart.append(fieldValue).append(" ");
+                queryWrapper.apply(appTemplate.getColumnName() + appTemplate.getArithmetic() + fieldValue);
+
             } else if (!StringUtils.isEmpty(appTemplate.getArithmetic())) {
-                sqlPart.append(" and ");
-                sqlPart.append(appTemplate.getColumnName()).append(" ");
-                sqlPart.append(appTemplate.getArithmetic()).append(" ");
+                queryWrapper.apply(appTemplate.getColumnName() + appTemplate.getArithmetic());
             }
         }
-        ObjectData objectData = objectDataMapper.queryCustom(objectDataDTO.getHashCode(), objectDataDTO.getApplicationId(), sqlPart.toString());
+        ObjectData objectData = objectDataMapper.selectOne(queryWrapper);
+        if (null == objectData) {
+            R.failed("未匹配中规则");
+        }
         return R.ok(objectToResult(objectData));
     }
 

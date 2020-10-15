@@ -4,12 +4,12 @@ create table T_APPLICATION
     id               NVARCHAR2(32) not null,
     application_name NVARCHAR2(64) not null,
     application_code NVARCHAR2(32) not null,
-    date_time        TIMESTAMP(6),
-    order_sort       NUMBER,
+    remarks          NVARCHAR2(255),
+    date_time        TIMESTAMP(6) default systimestamp,
+    status           NVARCHAR2(1) default 1 not null,
     parent_id        NVARCHAR2(32) not null,
     root_id          NVARCHAR2(32) not null,
-    remarks          NVARCHAR2(255),
-    status           NVARCHAR2(1) default 1 not null
+    order_sort       NUMBER
 )
     tablespace USERS
     pctfree 10
@@ -69,7 +69,6 @@ create unique index UK_APP_APPLICATION_CODE on T_APPLICATION (APPLICATION_CODE)
     minextents 1
     maxextents unlimited
     );
-
 -- Create/Recreate primary, unique and foreign key constraints
 alter table T_APPLICATION
     add constraint PK_APPLICATION_ID primary key (ID)
@@ -86,29 +85,30 @@ alter table T_APPLICATION
             maxextents unlimited
             );
 
+
 -- Create table
 create table T_APPLICATION_TEMPLATE
 (
     id             NVARCHAR2(32) not null,
-    application_id NVARCHAR2(32),
     segment_code   NVARCHAR2(32) not null,
     segment_name   NVARCHAR2(64) not null,
-    segment_type   NVARCHAR2(32) not null,
-    field_name     NVARCHAR2(32),
-    field_type     NVARCHAR2(32),
     column_name    NVARCHAR2(32) not null,
     column_type    NVARCHAR2(32) not null,
-    arithmetic     NVARCHAR2(32),
     is_request     NVARCHAR2(1) not null,
+    remarks        NVARCHAR2(255),
     custom_sql     NVARCHAR2(1000),
+    segment_type   NVARCHAR2(32) not null,
     order_sort     NUMBER,
+    date_time      TIMESTAMP(6) default systimestamp,
+    status         NVARCHAR2(1) default 1,
     in_out         NVARCHAR2(8) default 'IN' not null,
     is_join        NVARCHAR2(1) default 'N' not null,
     join_code      NVARCHAR2(32),
-    date_time      TIMESTAMP(6),
-    remarks        NVARCHAR2(255),
-    status         NVARCHAR2(1) default 1
-
+    application_id NVARCHAR2(32),
+    field_name     NVARCHAR2(32),
+    field_type     NVARCHAR2(32),
+    arithmetic     NVARCHAR2(32),
+    enable_sql     NVARCHAR2(1)
 )
     tablespace USERS
     pctfree 10
@@ -163,6 +163,8 @@ comment on column T_APPLICATION_TEMPLATE.field_type
     is 'java属性类型';
 comment on column T_APPLICATION_TEMPLATE.arithmetic
     is '运算符';
+comment on column T_APPLICATION_TEMPLATE.enable_sql
+    is '启用sql';
 -- Create/Recreate indexes
 create index NK_AT_APPLICATION_ID on T_APPLICATION_TEMPLATE (APPLICATION_ID)
     tablespace ROOT_SPACE
@@ -208,8 +210,6 @@ alter table T_APPLICATION_TEMPLATE
 create table T_OBJECT_DATA
 (
     id             NVARCHAR2(32) not null,
-    application_id NVARCHAR2(32) not null,
-    hash_code      NUMBER not null,
     column_char1   NVARCHAR2(255),
     column_char2   NVARCHAR2(255),
     column_char3   NVARCHAR2(255),
@@ -234,7 +234,12 @@ create table T_OBJECT_DATA
     column_date1   TIMESTAMP(6),
     column_date2   TIMESTAMP(6),
     column_date3   TIMESTAMP(6),
-    column_date4   TIMESTAMP(6)
+    column_date4   TIMESTAMP(6),
+    hash_code      NUMBER not null,
+    application_id NVARCHAR2(32) not null,
+    status         NVARCHAR2(1) default '2' not null,
+    date_time      TIMESTAMP(6) default systimestamp not null,
+    batch_group_id NUMBER(12) not null
 )
     tablespace USERS
     pctfree 10
@@ -247,6 +252,17 @@ create table T_OBJECT_DATA
     minextents 1
     maxextents unlimited
 );
+-- Add comments to the columns
+comment on column T_OBJECT_DATA.hash_code
+    is 'hash索引';
+comment on column T_OBJECT_DATA.application_id
+    is '应用id';
+comment on column T_OBJECT_DATA.status
+    is '0-禁用,1-启用,2-草稿';
+comment on column T_OBJECT_DATA.date_time
+    is '时间戳';
+comment on column T_OBJECT_DATA.batch_group_id
+    is '批次id';
 -- Create/Recreate indexes
 create index NK_HASH_CODE on T_OBJECT_DATA (HASH_CODE)
     tablespace USERS
@@ -275,20 +291,21 @@ alter table T_OBJECT_DATA
             minextents 1
             maxextents unlimited
             );
+
 -- Create table
 create table T_VALUE_SET
 (
     id                NVARCHAR2(32) not null,
     application_id    NVARCHAR2(32) not null,
+    value_code        NVARCHAR2(255) not null,
+    data_type         NVARCHAR2(32) not null,
+    remarks           NVARCHAR2(255),
+    status            NVARCHAR2(1) default 1 not null,
+    date_time         TIMESTAMP(6) default systimestamp,
     segment_name      NVARCHAR2(32),
     segment_code      NVARCHAR2(64),
-    value_code        NVARCHAR2(255) not null,
-    value_name        NVARCHAR2(255),
-    data_type         NVARCHAR2(32) not null,
     value_parent_code NVARCHAR2(64),
-    date_time         TIMESTAMP(6),
-    remarks           NVARCHAR2(255),
-    status            NVARCHAR2(1) default 1 not null
+    value_name        NVARCHAR2(255)
 )
     tablespace USERS
     pctfree 10
@@ -328,7 +345,7 @@ comment on column T_VALUE_SET.value_parent_code
 comment on column T_VALUE_SET.value_name
     is '值名称';
 -- Create/Recreate indexes
-create index NK_APPLICATION_ID on T_VALUE_SET (APPLICATION_ID)
+create index NK_VALUE_CODE on T_VALUE_SET (VALUE_CODE)
     tablespace USERS
     pctfree 10
     initrans 2
@@ -355,3 +372,6 @@ alter table T_VALUE_SET
             minextents 1
             maxextents unlimited
             );
+
+
+

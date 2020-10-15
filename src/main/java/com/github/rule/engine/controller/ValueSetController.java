@@ -1,5 +1,6 @@
 package com.github.rule.engine.controller;
 
+import com.baomidou.mybatisplus.extension.api.ApiController;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.github.rule.engine.dto.ValueSetRequest;
 import com.github.rule.engine.service.ValueSetService;
@@ -18,7 +19,7 @@ import javax.annotation.Resource;
  */
 @RestController
 @RequestMapping("valueSet")
-public class ValueSetController {
+public class ValueSetController extends ApiController {
     /**
      * 服务对象
      */

@@ -48,7 +48,7 @@ public abstract class AbstractExecuteService {
     protected void convertToEntity() throws NoSuchFieldException, IllegalAccessException {
         Map<String, Object> requestParam = executeRequest.getParam();
         Class objClass = objectDataDTO.getClass();
-        applicationTemplateList = applicationTemplateMapper.findListByApplicationCode(executeRequest.getApplicationCode());
+        applicationTemplateList = applicationTemplateMapper.findListByApplicationId(executeRequest.getApplicationId());
         if (CollectionUtils.isEmpty(applicationTemplateList)) {
             return;
         }

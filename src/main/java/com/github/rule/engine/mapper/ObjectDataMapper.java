@@ -1,10 +1,13 @@
 package com.github.rule.engine.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.github.rule.engine.dto.InsertBatchObjectRequest;
 import com.github.rule.engine.dto.ObjectDataDTO;
 import com.github.rule.engine.entity.ObjectData;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * (TObjectData)表数据库访问层
@@ -24,4 +27,28 @@ public interface ObjectDataMapper extends BaseMapper<ObjectData> {
 
     Long queryHashCode(ObjectDataDTO objectDataDTO);
 
+    int insertColumnBatch(@Param("dataList") InsertBatchObjectRequest insertBatchObjectRequest);
+
+    void deleteBatch();
+
+    List<ObjectData> queryColumnAll(@Param("applicationId") String applicationId);
+
+    int insertBatchObjectData(@Param("applicationId") String applicationId, @Param("batchGroupId") Long batchGroupId);
+
+    /**
+     * 获取下一个批次id
+     */
+    Long nextvalBatchGroupId();
+
+    /**
+     * 获取当前批次id
+     */
+    Long currvalBatchGroupId();
+
+    List<Long> queryRepeatHashCode(@Param("applicationId") String applicationId,@Param("batchGroupId") Long batchGroupId);
+
+    List<ObjectData> queryRepeatObjectData(@Param("applicationId") String applicationId,@Param("batchGroupId") Long batchGroupId,
+                                           @Param("hashCodes")List<Long> hashCodes);
+
+    List<ObjectData> queryRepeat(@Param("applicationId") String applicationId);
 }

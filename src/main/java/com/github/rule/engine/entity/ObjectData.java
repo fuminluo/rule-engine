@@ -10,6 +10,7 @@ import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 /**
@@ -30,6 +31,8 @@ public class ObjectData extends Model<ObjectData> {
     private String hashCode;
 
     private String applicationId;
+
+    private LocalDateTime dateTime;
 
     private String columnChar1;
 
@@ -73,13 +76,13 @@ public class ObjectData extends Model<ObjectData> {
 
     private BigDecimal columnNumber6;
 
-    private LocalDate columnDate1;
+    private LocalDateTime columnDate1;
 
-    private LocalDate columnDate2;
+    private LocalDateTime columnDate2;
 
-    private LocalDate columnDate3;
+    private LocalDateTime columnDate3;
 
-    private LocalDate columnDate4;
+    private LocalDateTime columnDate4;
 
 
 }
