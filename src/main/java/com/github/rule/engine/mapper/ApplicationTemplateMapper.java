@@ -19,5 +19,5 @@ public interface ApplicationTemplateMapper extends BaseMapper<ApplicationTemplat
 
     List<String> getInParam(@Param("applicationId") String applicationId, @Param("inOut") String inOut);
 
-    List<ApplicationTemplate> findListByApplicationCode(@Param("applicationCode") String applicationCode);
+    List<ApplicationTemplate> findListByApplicationId(@Param("applicationId") String applicationId);
 }

@@ -1,6 +1,8 @@
 package com.github.rule.engine.service;
 
+import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.github.rule.engine.dto.ValueSetRequest;
 import com.github.rule.engine.entity.ValueSet;
 
 import java.util.List;
@@ -13,4 +15,5 @@ import java.util.List;
  */
 public interface ValueSetService extends IService<ValueSet> {
 
+    R<?> findvalueSet(ValueSetRequest valueSetRequest);
 }

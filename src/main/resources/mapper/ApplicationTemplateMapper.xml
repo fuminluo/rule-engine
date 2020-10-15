@@ -29,9 +29,9 @@
         SELECT segment_code FROM t_application_template WHERE application_id = #{applicationId} AND in_out = #{inOut} AND status = '1' ORDER BY order_sort
     </select>
 
-    <select id="findListByApplicationCode" resultMap="BaseResultMap">
+    <select id="findListByApplicationId" resultMap="BaseResultMap">
       SELECT tt.* FROM t_application_template tt ,t_application t
-       WHERE t.id = tt.application_id AND t.application_code = #{applicationCode}
+       WHERE t.id = tt.application_id AND t.id = #{applicationId}
        AND tt.status = '1' AND t.status = '1' ORDER BY tt.order_sort
     </select>
 

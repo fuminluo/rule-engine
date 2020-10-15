@@ -6,8 +6,10 @@ import com.baomidou.mybatisplus.extension.api.ApiController;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.rule.engine.dto.ExecuteRequest;
+import com.github.rule.engine.dto.InsertBatchObjectRequest;
 import com.github.rule.engine.entity.ObjectData;
 import com.github.rule.engine.service.ObjectDataService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +24,7 @@ import java.util.UUID;
  * @author makejava
  * @since 2020-10-08 19:06:57
  */
+@Slf4j
 @RestController
 @RequestMapping("objectData")
 public class ObjectDataController extends ApiController {
@@ -33,8 +36,31 @@ public class ObjectDataController extends ApiController {
 
     @PostMapping("/execute")
     public R execute(@RequestBody @Validated ExecuteRequest executeRequest) throws NoSuchFieldException, IllegalAccessException {
+        log.info(">>> execute : {}", executeRequest.toString());
         return objectDataService.execute(executeRequest);
 
+    }
+
+    /**
+     * 新增数据
+     *
+     * @param insertBatchObjectRequest 实体对象
+     * @return 新增结果
+     */
+    @PostMapping("/insertBatch")
+    public R insertBatch(@RequestBody InsertBatchObjectRequest insertBatchObjectRequest) {
+        return success(this.objectDataService.insertBatch(insertBatchObjectRequest));
+    }
+
+    /**
+     * 校验是否重复有重复或时间重叠
+     *
+     * @param applicationId 应用id
+     * @return
+     */
+    @GetMapping("/validated")
+    public R validated(@RequestParam(value = "applicationId") String applicationId) {
+        return objectDataService.validated(applicationId);
     }
 
     /**
@@ -71,6 +97,7 @@ public class ObjectDataController extends ApiController {
         objectData.setId(UUID.randomUUID().toString().replace("-", ""));
         return success(this.objectDataService.save(objectData));
     }
+
 
     /**
      * 修改数据
