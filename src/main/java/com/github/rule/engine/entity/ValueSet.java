@@ -66,6 +66,11 @@ public class ValueSet extends Model<ValueSet> {
      */
     private String valueName;
 
+    /**
+     * 应用根id
+     */
+    private String rootId;
+
 
     /**
      * 获取主键值

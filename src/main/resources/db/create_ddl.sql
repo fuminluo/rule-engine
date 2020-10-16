@@ -373,5 +373,20 @@ alter table T_VALUE_SET
             maxextents unlimited
             );
 
-
-
+-- Create table
+create global temporary table T_VALUE_SET_TEMP
+(
+    id                NVARCHAR2(32) not null,
+    application_id    NVARCHAR2(32) not null,
+    value_code        NVARCHAR2(255) not null,
+    data_type         NVARCHAR2(32) not null,
+    remarks           NVARCHAR2(255),
+    status            NVARCHAR2(1) default 1 not null,
+    date_time         TIMESTAMP(6) default systimestamp,
+    segment_name      NVARCHAR2(32),
+    segment_code      NVARCHAR2(64),
+    value_parent_code NVARCHAR2(64),
+    value_name        NVARCHAR2(255),
+    root_id           NVARCHAR2(32)
+)
+    on commit delete rows;

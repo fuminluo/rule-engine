@@ -1,6 +1,7 @@
 package com.github.rule.engine.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -15,7 +16,7 @@ import java.time.LocalDate;
 @Data
 @SuppressWarnings("serial")
 @TableName(value = "t_application_template")
-public class ApplicationTemplate implements Serializable {
+public class ApplicationTemplate extends Model<ApplicationTemplate> implements Serializable {
 
     private static final long serialVersionUID = -79677609541154456L;
     /**
