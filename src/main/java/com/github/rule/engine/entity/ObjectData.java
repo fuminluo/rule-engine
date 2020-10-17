@@ -34,6 +34,11 @@ public class ObjectData extends Model<ObjectData> {
 
     private LocalDateTime dateTime;
 
+    /**
+     * 0-禁用,1-启用,2-草稿
+     */
+    private String status;
+
     private String columnChar1;
 
     private String columnChar2;

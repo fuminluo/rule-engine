@@ -1,9 +1,16 @@
 package com.github.rule.engine.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.enums.SqlKeyword;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.api.R;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.rule.engine.dto.ApplicationTableDTO;
 import com.github.rule.engine.dto.ExecuteRequest;
 import com.github.rule.engine.dto.InsertBatchObjectRequest;
+import com.github.rule.engine.entity.ApplicationTemplate;
 import com.github.rule.engine.entity.ObjectData;
 import com.github.rule.engine.mapper.ApplicationMapper;
 import com.github.rule.engine.mapper.ApplicationTemplateMapper;
@@ -12,9 +19,13 @@ import com.github.rule.engine.service.AbstractExecuteService;
 import com.github.rule.engine.service.ObjectDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.util.List;
+import java.lang.reflect.Field;
+import java.util.*;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 /**
  * (TObjectData)表服务实现类
@@ -34,6 +45,14 @@ public class ObjectDataServiceImpl extends ServiceImpl<ObjectDataMapper, ObjectD
     @Autowired
     ObjectDataMapper objectDataMapper;
 
+    /**
+     * 按维度参数读取规则配置
+     *
+     * @param executeRequest
+     * @return
+     * @throws NoSuchFieldException
+     * @throws IllegalAccessException
+     */
     @Override
     public R execute(ExecuteRequest executeRequest) throws NoSuchFieldException, IllegalAccessException {
         AbstractExecuteService defaultExecuteObjectData = new DefaultExecuteServiceImpl(executeRequest);
@@ -41,7 +60,14 @@ public class ObjectDataServiceImpl extends ServiceImpl<ObjectDataMapper, ObjectD
         return result;
     }
 
+    /**
+     * 写入数据
+     *
+     * @param batchObjectRequest
+     * @return
+     */
     @Override
+    @Transactional
     public Integer insertBatch(InsertBatchObjectRequest batchObjectRequest) {
         objectDataMapper.deleteBatch();
         objectDataMapper.insertColumnBatch(batchObjectRequest);
@@ -49,6 +75,12 @@ public class ObjectDataServiceImpl extends ServiceImpl<ObjectDataMapper, ObjectD
         return objectDataMapper.insertBatchObjectData(batchObjectRequest.getApplicationId(), batchGroupId);
     }
 
+    /**
+     * 校验是否重复有重复或时间重叠
+     *
+     * @param applicationId 应用id
+     * @return
+     */
     @Override
     public R validated(String applicationId) {
         //校验逻辑因业务差异需要自己实现
@@ -57,5 +89,41 @@ public class ObjectDataServiceImpl extends ServiceImpl<ObjectDataMapper, ObjectD
             return R.failed("无重复数据");
         }
         return R.ok(objectDataList);
+    }
+
+    /**
+     * 读取详细数据
+     *
+     * @param applicationId
+     * @param currentPage
+     * @param pageSize
+     * @return
+     * @throws NoSuchFieldException
+     * @throws IllegalAccessException
+     */
+    @Override
+    public R getList(String applicationId, Integer currentPage, Integer pageSize) throws NoSuchFieldException, IllegalAccessException {
+        LambdaQueryWrapper<ObjectData> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(ObjectData::getApplicationId, applicationId);
+        queryWrapper.orderBy(true, false, ObjectData::getDateTime);
+        IPage<ObjectData> page = new Page<>(currentPage, pageSize);
+        page = objectDataMapper.selectPage(page, queryWrapper);
+        List<ObjectData> list = page.getRecords();
+        List<ApplicationTemplate> applicationTemplateList = applicationTemplateMapper.findListByApplicationId(applicationId);
+        Map<String, String> templateMap = applicationTemplateList.
+                stream().collect(Collectors.toMap(ApplicationTemplate::getSegmentCode, ApplicationTemplate::getFieldName));
+        List<Map> resultList = new ArrayList<>(list.size());
+        for (ObjectData obj : list) {
+            Map value = new HashMap(12);
+            for (Map.Entry<String, String> entry : templateMap.entrySet()) {
+                Field field = obj.getClass().getDeclaredField(entry.getValue());
+                //对private的属性的访问
+                field.setAccessible(true);
+                Object data = field.get(obj);
+                value.put(entry.getKey(), data);
+            }
+            resultList.add(value);
+        }
+        return R.ok(resultList);
     }
 }

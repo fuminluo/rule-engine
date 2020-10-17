@@ -58,7 +58,7 @@ public class ValueSetController extends ApiController {
 
 
     /**
-     * excel 导入
+     * 下载excel模板
      *
      * @param applicationId
      * @return

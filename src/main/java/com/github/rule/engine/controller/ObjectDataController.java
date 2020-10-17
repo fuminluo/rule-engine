@@ -34,6 +34,14 @@ public class ObjectDataController extends ApiController {
     @Resource
     private ObjectDataService objectDataService;
 
+    /**
+     * 按维度参数读取规则配置
+     *
+     * @param executeRequest
+     * @return
+     * @throws NoSuchFieldException
+     * @throws IllegalAccessException
+     */
     @PostMapping("/execute")
     public R execute(@RequestBody @Validated ExecuteRequest executeRequest) throws NoSuchFieldException, IllegalAccessException {
         log.info(">>> execute : {}", executeRequest.toString());
@@ -62,6 +70,24 @@ public class ObjectDataController extends ApiController {
     public R validated(@RequestParam(value = "applicationId") String applicationId) {
         return objectDataService.validated(applicationId);
     }
+
+    /**
+     * 读取详细数据
+     *
+     * @param applicationId
+     * @param currentPage
+     * @param pageSize
+     * @return
+     * @throws NoSuchFieldException
+     * @throws IllegalAccessException
+     */
+    @GetMapping("/list")
+    public R getList(@RequestParam(value = "applicationId") String applicationId,
+                     @RequestParam(value = "currentPage", defaultValue = "1") Integer currentPage,
+                     @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize) throws NoSuchFieldException, IllegalAccessException {
+        return objectDataService.getList(applicationId, currentPage, pageSize);
+    }
+
 
     /**
      * 分页查询所有数据
