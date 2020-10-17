@@ -7,6 +7,7 @@
         <result property="hashCode" column="HASH_CODE" jdbcType="DECIMAL"/>
         <result property="applicationId" column="APPLICATION_ID" jdbcType="VARCHAR"/>
         <result property="dateTime" column="DATE_TIME" jdbcType="TIMESTAMP"/>
+        <result property="status" column="STATUS" jdbcType="VARCHAR"/>
         <result property="columnChar1" column="COLUMN_CHAR1" jdbcType="VARCHAR"/>
         <result property="columnChar2" column="COLUMN_CHAR2" jdbcType="VARCHAR"/>
         <result property="columnChar3" column="COLUMN_CHAR3" jdbcType="VARCHAR"/>

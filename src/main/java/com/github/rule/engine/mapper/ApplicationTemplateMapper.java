@@ -6,6 +6,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * 模板配置表(TApplicationTemplate)表数据库访问层
@@ -20,4 +22,5 @@ public interface ApplicationTemplateMapper extends BaseMapper<ApplicationTemplat
     List<String> getInParam(@Param("applicationId") String applicationId, @Param("inOut") String inOut);
 
     List<ApplicationTemplate> findListByApplicationId(@Param("applicationId") String applicationId);
+
 }

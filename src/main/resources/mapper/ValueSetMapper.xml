@@ -8,13 +8,40 @@
         <result property="valueCode" column="VALUE_CODE" jdbcType="VARCHAR"/>
         <result property="dataType" column="DATA_TYPE" jdbcType="VARCHAR"/>
         <result property="remarks" column="REMARKS" jdbcType="VARCHAR"/>
-        <result property="status" column="STATUS" jdbcType="OTHER"/>
-        <result property="dateTime" column="DATE_TIME" jdbcType="OTHER"/>
+        <result property="status" column="STATUS" jdbcType="VARCHAR"/>
+        <result property="dateTime" column="DATE_TIME" jdbcType="TIMESTAMP"/>
         <result property="segmentName" column="SEGMENT_NAME" jdbcType="VARCHAR"/>
         <result property="segmentCode" column="SEGMENT_CODE" jdbcType="VARCHAR"/>
         <result property="valueParentCode" column="VALUE_PARENT_CODE" jdbcType="VARCHAR"/>
-        <result property="valueName" column="VALUE_NAME" jdbcType="OTHER"/>
+        <result property="valueName" column="VALUE_NAME" jdbcType="VARCHAR"/>
+        <result property="rootId" column="ROOT_ID" jdbcType="VARCHAR"/>
     </resultMap>
+
+
+    <insert id="insertBatchTemp" parameterType="com.github.rule.engine.dto.ValueSetExcelDTO">
+        INSERT ALL
+        <if test='list != null and list.size()>0'>
+            <foreach collection="list" item="item" index="index">
+                INTO T_VALUE_SET_TEMP (ID,APPLICATION_ID,VALUE_CODE,VALUE_NAME,
+                DATA_TYPE,REMARKS,SEGMENT_CODE,SEGMENT_NAME,VALUE_PARENT_CODE,ROOT_ID)
+                VALUES (sys_guid(),#{applicationId,jdbcType=VARCHAR},#{item.valueCode,jdbcType=VARCHAR},#{item.valueName,jdbcType=VARCHAR},
+                #{item.dataType,jdbcType=VARCHAR}, #{item.remarks,jdbcType=VARCHAR}, #{segmentCode,jdbcType=VARCHAR}, #{segmentName,jdbcType=VARCHAR},
+                #{item.valueParentCode,jdbcType=VARCHAR},#{rootId,jdbcType=VARCHAR})
+            </foreach>
+        </if>
+        SELECT * FROM dual
+    </insert>
+
+    <insert id="copyInsertBatch">
+            INSERT INTO t_value_set
+               SELECT temp.*
+                 FROM t_value_set_temp temp
+                WHERE NOT EXISTS (SELECT 1
+                         FROM t_value_set t
+                        WHERE temp.value_code = t.value_code
+                          AND temp.value_name = t.value_name
+                          AND temp.application_id = t.application_id)
+    </insert>
 
 
     <select id="findvalueSet" parameterType="com.github.rule.engine.dto.ValueSetRequest" resultMap="BaseResultMap">
@@ -24,15 +51,15 @@
         FROM T_VALUE_SET
         WHERE
         status = '1'
-            <if test="applicationId != null">
-                and APPLICATION_ID = #{applicationId}
-            </if>
-            <if test="applicationId != null">
-                and SEGMENT_CODE = #{segmentCode}
-            </if>
-            <if test="applicationId != null">
-                and VALUE_PARENT_CODE = #{valueParentCode}
-            </if>
+        <if test="applicationId != null">
+            and APPLICATION_ID = #{applicationId}
+        </if>
+        <if test="applicationId != null">
+            and SEGMENT_CODE = #{segmentCode}
+        </if>
+        <if test="applicationId != null">
+            and VALUE_PARENT_CODE = #{valueParentCode}
+        </if>
 
     </select>
 

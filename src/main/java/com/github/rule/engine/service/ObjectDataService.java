@@ -14,9 +14,41 @@ import com.github.rule.engine.entity.ObjectData;
  */
 public interface ObjectDataService extends IService<ObjectData> {
 
+    /**
+     * 按维度参数读取规则配置
+     *
+     * @param executeRequest
+     * @return
+     * @throws NoSuchFieldException
+     * @throws IllegalAccessException
+     */
     R execute(ExecuteRequest executeRequest) throws NoSuchFieldException, IllegalAccessException;
 
+    /**
+     * 写入数据
+     *
+     * @param insertBatchObjectRequest
+     * @return
+     */
     Integer insertBatch(InsertBatchObjectRequest insertBatchObjectRequest);
 
+    /**
+     * 校验是否重复有重复或时间重叠
+     *
+     * @param applicationId 应用id
+     * @return
+     */
     R validated(String applicationId);
+
+    /**
+     * 读取详细数据
+     *
+     * @param applicationId
+     * @param currentPage
+     * @param pageSize
+     * @return
+     * @throws NoSuchFieldException
+     * @throws IllegalAccessException
+     */
+    R getList(String applicationId, Integer currentPage, Integer pageSize) throws NoSuchFieldException, IllegalAccessException;
 }
