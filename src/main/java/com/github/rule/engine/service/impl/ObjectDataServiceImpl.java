@@ -69,9 +69,10 @@ public class ObjectDataServiceImpl extends ServiceImpl<ObjectDataMapper, ObjectD
     @Override
     @Transactional
     public Integer insertBatch(InsertBatchObjectRequest batchObjectRequest) {
-        objectDataMapper.deleteBatch();
+        //先写入临时表
         objectDataMapper.insertColumnBatch(batchObjectRequest);
         Long batchGroupId = objectDataMapper.nextvalBatchGroupId();
+        //写入正式表
         return objectDataMapper.insertBatchObjectData(batchObjectRequest.getApplicationId(), batchGroupId);
     }
 
