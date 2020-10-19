@@ -55,4 +55,7 @@ public interface ObjectDataMapper extends BaseMapper<ObjectData> {
     IPage<ObjectData> queryList(IPage<ObjectData> page, @Param("applicationId") String applicationId);
 
     int insertMappingBatch(@Param("applicationId") String applicationId);
+
+
+    int updateMappingBatch(@Param("applicationId") String applicationId);
 }
