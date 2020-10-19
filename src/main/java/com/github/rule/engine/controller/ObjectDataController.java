@@ -50,7 +50,7 @@ public class ObjectDataController extends ApiController {
     }
 
     /**
-     * 新增数据
+     * 批量新增数据
      *
      * @param insertBatchObjectRequest 实体对象
      * @return 新增结果

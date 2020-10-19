@@ -33,10 +33,6 @@
         <result property="columnDate2" column="COLUMN_DATE2" jdbcType="TIMESTAMP"/>
         <result property="columnDate3" column="COLUMN_DATE3" jdbcType="TIMESTAMP"/>
     </resultMap>
-    <delete id="deleteBatch" statementType="CALLABLE">
-            {call clean_column_table()}
-    </delete>
-
 
     <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="BaseResultMap">
@@ -44,7 +40,7 @@
         ID, COLUMN_CHAR1, COLUMN_CHAR2, COLUMN_CHAR3, COLUMN_CHAR4, COLUMN_CHAR5, COLUMN_CHAR6, COLUMN_CHAR7,
         COLUMN_CHAR8, COLUMN_CHAR9, COLUMN_CHAR10, COLUMN_CHAR11, COLUMN_CHAR12, COLUMN_CHAR13, COLUMN_CHAR14,
         COLUMN_CHAR15, COLUMN_NUMBER1, COLUMN_NUMBER2, COLUMN_NUMBER3, COLUMN_NUMBER4, COLUMN_NUMBER5, COLUMN_NUMBER6,
-        COLUMN_DATE1, COLUMN_DATE2, COLUMN_DATE3, COLUMN_DATE4, HASH_CODE, APPLICATION_ID,DATE_TIME
+        COLUMN_DATE1, COLUMN_DATE2, COLUMN_DATE3, COLUMN_DATE4, HASH_CODE, APPLICATION_ID,DATE_TIME,STATUS
         from T_OBJECT_DATA
         <where>
             <if test="id != null">
@@ -625,5 +621,222 @@
              AND t1.application_id = #{applicationId} AND t2.application_id = #{applicationId}
              AND (t1.column_date2 BETWEEN t2.column_date1 AND t2.column_date2)
     </select>
+
+    <select id="queryList" resultMap="BaseResultMap">
+         SELECT t1.id,
+         t1.column_char1 ||
+         nvl2(t2.column_char1, '-' || t2.column_char1, '') AS column_char1,
+         t1.column_char2 ||
+         nvl2(t2.column_char2, '-' || t2.column_char2, '') AS column_char2,
+         t1.column_char3 ||
+         nvl2(t2.column_char3, '-' || t2.column_char3, '') AS column_char3,
+         t1.column_char4 ||
+         nvl2(t2.column_char4, '-' || t2.column_char4, '') AS column_char4,
+         t1.column_char5 ||
+         nvl2(t2.column_char5, '-' || t2.column_char5, '') AS column_char5,
+         t1.column_char6 ||
+         nvl2(t2.column_char6, '-' || t2.column_char6, '') AS column_char6,
+         t1.column_char7 ||
+         nvl2(t2.column_char7, '-' || t2.column_char7, '') AS column_char7,
+         t1.column_char8 ||
+         nvl2(t2.column_char8, '-' || t2.column_char8, '') AS column_char8,
+         t1.column_char9 ||
+         nvl2(t2.column_char9, '-' || t2.column_char9, '') AS column_char9,
+         t1.column_char10 ||
+         nvl2(t2.column_char10, '-' || t2.column_char10, '') AS column_char10,
+         t1.column_char11 ||
+         nvl2(t2.column_char11, '-' || t2.column_char11, '') AS column_char11,
+         t1.column_char12 ||
+         nvl2(t2.column_char12, '-' || t2.column_char12, '') AS column_char12,
+         t1.column_char13 ||
+         nvl2(t2.column_char13, '-' || t2.column_char13, '') AS column_char13,
+         t1.column_char14 ||
+         nvl2(t2.column_char14, '-' || t2.column_char14, '') AS column_char14,
+         t1.column_char15 ||
+         nvl2(t2.column_char15, '-' || t2.column_char15, '') AS column_char15,
+         t1.column_number1,
+         t1.column_number2,
+         t1.column_number3,
+         t1.column_number4,
+         t1.column_number5,
+         t1.column_number6,
+         t1.column_date1,
+         t1.column_date2,
+         t1.column_date3,
+         t1.column_date4,
+         t1. hash_code,
+         t1.application_id,
+         t1.date_time,
+         decode(t1.status,'0','0-禁用','1','1-启用','2','2-草稿') as status
+        FROM t_object_data t1
+        LEFT JOIN t_object_data_mapping t2
+          ON t1.id = t2.id
+            where t1.application_id = #{applicationId}
+    </select>
+
+
+    <insert id="insertMappingBatch">
+        INSERT INTO t_object_data_mapping
+          (id,
+           application_id,
+           hash_code,
+           batch_group_id,
+           column_char1,
+           column_char2,
+           column_char3,
+           column_char4,
+           column_char5,
+           column_char6,
+           column_char7,
+           column_char8,
+           column_char9,
+           column_char10,
+           column_char11,
+           column_char12,
+           column_char13,
+           column_char14,
+           column_char15)
+            SELECT t1.id,
+                   t1.application_id,
+                   t1.hash_code,
+                   t1.batch_group_id,
+                   (SELECT v1.value_name
+                      FROM t_value_set v1, t_application_template temp1
+                     WHERE v1.application_id = t1.application_id
+                       AND temp1.application_id = t1.application_id
+                       AND temp1.column_name = 'column_char1'
+                       AND v1.segment_code = temp1.segment_code
+                       AND v1.value_code = t1.column_char1
+                       AND v1.status = '1'
+                       AND rownum = 1),
+                   (SELECT v1.value_name
+                      FROM t_value_set v1, t_application_template temp1
+                     WHERE v1.application_id = t1.application_id
+                       AND temp1.application_id = t1.application_id
+                       AND temp1.column_name = 'column_char2'
+                       AND v1.segment_code = temp1.segment_code
+                       AND v1.value_code = t1.column_char2
+                       AND v1.status = '1'
+                       AND rownum = 1),
+                   (SELECT v1.value_name
+                      FROM t_value_set v1, t_application_template temp1
+                     WHERE v1.application_id = t1.application_id
+                       AND temp1.application_id = t1.application_id
+                       AND temp1.column_name = 'column_char3'
+                       AND v1.segment_code = temp1.segment_code
+                       AND v1.value_code = t1.column_char3
+                       AND v1.status = '1'
+                       AND rownum = 1),
+                   (SELECT v1.value_name
+                      FROM t_value_set v1, t_application_template temp1
+                     WHERE v1.application_id = t1.application_id
+                       AND temp1.application_id = t1.application_id
+                       AND temp1.column_name = 'column_char4'
+                       AND v1.segment_code = temp1.segment_code
+                       AND v1.value_code = t1.column_char4
+                       AND v1.status = '1'
+                       AND rownum = 1),
+                   (SELECT v1.value_name
+                      FROM t_value_set v1, t_application_template temp1
+                     WHERE v1.application_id = t1.application_id
+                       AND temp1.application_id = t1.application_id
+                       AND temp1.column_name = 'column_char5'
+                       AND v1.segment_code = temp1.segment_code
+                       AND v1.value_code = t1.column_char5
+                       AND v1.status = '1'
+                       AND rownum = 1),
+                   (SELECT v1.value_name
+                      FROM t_value_set v1, t_application_template temp1
+                     WHERE v1.application_id = t1.application_id
+                       AND temp1.application_id = t1.application_id
+                       AND temp1.column_name = 'column_char6'
+                       AND v1.segment_code = temp1.segment_code
+                       AND v1.value_code = t1.column_char6
+                       AND v1.status = '1'
+                       AND rownum = 1),
+                   (SELECT v1.value_name
+                      FROM t_value_set v1, t_application_template temp1
+                     WHERE v1.application_id = t1.application_id
+                       AND temp1.application_id = t1.application_id
+                       AND temp1.column_name = 'column_char7'
+                       AND v1.segment_code = temp1.segment_code
+                       AND v1.value_code = t1.column_char7
+                       AND v1.status = '1'
+                       AND rownum = 1),
+                   (SELECT v1.value_name
+                      FROM t_value_set v1, t_application_template temp1
+                     WHERE v1.application_id = t1.application_id
+                       AND temp1.application_id = t1.application_id
+                       AND temp1.column_name = 'column_char8'
+                       AND v1.segment_code = temp1.segment_code
+                       AND v1.value_code = t1.column_char8
+                       AND v1.status = '1'
+                       AND rownum = 1),
+                   (SELECT v1.value_name
+                      FROM t_value_set v1, t_application_template temp1
+                     WHERE v1.application_id = t1.application_id
+                       AND temp1.application_id = t1.application_id
+                       AND temp1.column_name = 'column_char9'
+                       AND v1.segment_code = temp1.segment_code
+                       AND v1.value_code = t1.column_char9
+                       AND v1.status = '1'
+                       AND rownum = 1),
+                   (SELECT v1.value_name
+                      FROM t_value_set v1, t_application_template temp1
+                     WHERE v1.application_id = t1.application_id
+                       AND temp1.application_id = t1.application_id
+                       AND temp1.column_name = 'column_char10'
+                       AND v1.segment_code = temp1.segment_code
+                       AND v1.value_code = t1.column_char10
+                       AND v1.status = '1'
+                       AND rownum = 1),
+                   (SELECT v1.value_name
+                      FROM t_value_set v1, t_application_template temp1
+                     WHERE v1.application_id = t1.application_id
+                       AND temp1.application_id = t1.application_id
+                       AND temp1.column_name = 'column_char11'
+                       AND v1.segment_code = temp1.segment_code
+                       AND v1.value_code = t1.column_char11
+                       AND v1.status = '1'
+                       AND rownum = 1),
+                   (SELECT v1.value_name
+                      FROM t_value_set v1, t_application_template temp1
+                     WHERE v1.application_id = t1.application_id
+                       AND temp1.application_id = t1.application_id
+                       AND temp1.column_name = 'column_char12'
+                       AND v1.segment_code = temp1.segment_code
+                       AND v1.value_code = t1.column_char12
+                       AND v1.status = '1'
+                       AND rownum = 1),
+                   (SELECT v1.value_name
+                      FROM t_value_set v1, t_application_template temp1
+                     WHERE v1.application_id = t1.application_id
+                       AND temp1.application_id = t1.application_id
+                       AND temp1.column_name = 'column_char13'
+                       AND v1.segment_code = temp1.segment_code
+                       AND v1.value_code = t1.column_char13
+                       AND v1.status = '1'
+                       AND rownum = 1),
+                   (SELECT v1.value_name
+                      FROM t_value_set v1, t_application_template temp1
+                     WHERE v1.application_id = t1.application_id
+                       AND temp1.application_id = t1.application_id
+                       AND temp1.column_name = 'column_char14'
+                       AND v1.segment_code = temp1.segment_code
+                       AND v1.value_code = t1.column_char14
+                       AND v1.status = '1'
+                       AND rownum = 1),
+                   (SELECT v1.value_name
+                      FROM t_value_set v1, t_application_template temp1
+                     WHERE v1.application_id = t1.application_id
+                       AND temp1.application_id = t1.application_id
+                       AND temp1.column_name = 'column_char15'
+                       AND v1.segment_code = temp1.segment_code
+                       AND v1.value_code = t1.column_char15
+                       AND v1.status = '1'
+                       AND rownum = 1)
+              FROM t_object_data t1
+                WHERE t1.application_id = #{applicationId} not exists (select 1 from t_object_data_mapping t2 where t1.id = t2.id);
+    </insert>
 
 </mapper>

@@ -69,10 +69,15 @@ public class ObjectDataServiceImpl extends ServiceImpl<ObjectDataMapper, ObjectD
     @Override
     @Transactional
     public Integer insertBatch(InsertBatchObjectRequest batchObjectRequest) {
-        objectDataMapper.deleteBatch();
+        //写入临时表
         objectDataMapper.insertColumnBatch(batchObjectRequest);
+        //获取批次id
         Long batchGroupId = objectDataMapper.nextvalBatchGroupId();
-        return objectDataMapper.insertBatchObjectData(batchObjectRequest.getApplicationId(), batchGroupId);
+        //写入正式表
+        int count = objectDataMapper.insertBatchObjectData(batchObjectRequest.getApplicationId(), batchGroupId);
+        //写入翻译表
+        objectDataMapper.insertMappingBatch(batchObjectRequest.getApplicationId());
+        return count;
     }
 
     /**
@@ -103,11 +108,8 @@ public class ObjectDataServiceImpl extends ServiceImpl<ObjectDataMapper, ObjectD
      */
     @Override
     public R getList(String applicationId, Integer currentPage, Integer pageSize) throws NoSuchFieldException, IllegalAccessException {
-        LambdaQueryWrapper<ObjectData> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(ObjectData::getApplicationId, applicationId);
-        queryWrapper.orderBy(true, false, ObjectData::getDateTime);
         IPage<ObjectData> page = new Page<>(currentPage, pageSize);
-        page = objectDataMapper.selectPage(page, queryWrapper);
+        page = objectDataMapper.queryList(page, applicationId);
         List<ObjectData> list = page.getRecords();
         List<ApplicationTemplate> applicationTemplateList = applicationTemplateMapper.findListByApplicationId(applicationId);
         Map<String, String> templateMap = applicationTemplateList.
@@ -122,6 +124,10 @@ public class ObjectDataServiceImpl extends ServiceImpl<ObjectDataMapper, ObjectD
                 Object data = field.get(obj);
                 value.put(entry.getKey(), data);
             }
+            value.put("dateTime", obj.getDateTime());
+            value.put("applicationId", obj.getApplicationId());
+            value.put("status", obj.getStatus());
+            value.put("id", obj.getId());
             resultList.add(value);
         }
         return R.ok(resultList);

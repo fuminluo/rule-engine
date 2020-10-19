@@ -1,6 +1,7 @@
 package com.github.rule.engine.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.github.rule.engine.dto.InsertBatchObjectRequest;
 import com.github.rule.engine.dto.ObjectDataDTO;
 import com.github.rule.engine.entity.ObjectData;
@@ -29,8 +30,6 @@ public interface ObjectDataMapper extends BaseMapper<ObjectData> {
 
     int insertColumnBatch(@Param("dataList") InsertBatchObjectRequest insertBatchObjectRequest);
 
-    void deleteBatch();
-
     List<ObjectData> queryColumnAll(@Param("applicationId") String applicationId);
 
     int insertBatchObjectData(@Param("applicationId") String applicationId, @Param("batchGroupId") Long batchGroupId);
@@ -45,10 +44,15 @@ public interface ObjectDataMapper extends BaseMapper<ObjectData> {
      */
     Long currvalBatchGroupId();
 
-    List<Long> queryRepeatHashCode(@Param("applicationId") String applicationId,@Param("batchGroupId") Long batchGroupId);
+    List<Long> queryRepeatHashCode(@Param("applicationId") String applicationId, @Param("batchGroupId") Long batchGroupId);
 
-    List<ObjectData> queryRepeatObjectData(@Param("applicationId") String applicationId,@Param("batchGroupId") Long batchGroupId,
-                                           @Param("hashCodes")List<Long> hashCodes);
+    List<ObjectData> queryRepeatObjectData(@Param("applicationId") String applicationId, @Param("batchGroupId") Long batchGroupId,
+                                           @Param("hashCodes") List<Long> hashCodes);
 
     List<ObjectData> queryRepeat(@Param("applicationId") String applicationId);
+
+
+    IPage<ObjectData> queryList(IPage<ObjectData> page, @Param("applicationId") String applicationId);
+
+    int insertMappingBatch(@Param("applicationId") String applicationId);
 }
