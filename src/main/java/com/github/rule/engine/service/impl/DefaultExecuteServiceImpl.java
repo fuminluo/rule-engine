@@ -38,6 +38,7 @@ public class DefaultExecuteServiceImpl extends AbstractExecuteService {
         QueryWrapper<ObjectData> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("hash_code", objectDataDTO.getHashCode());
         queryWrapper.eq("application_id", objectDataDTO.getApplicationId());
+        queryWrapper.eq("status", "1");
         for (ApplicationTemplate appTemplate : applicationTemplates) {
             if (PutTypeEnum.IN.getValue().equals(appTemplate.getInOut())
                     || PutTypeEnum.INOUT.getValue().equals(appTemplate.getInOut())) {
@@ -47,7 +48,7 @@ public class DefaultExecuteServiceImpl extends AbstractExecuteService {
                 queryWrapper.apply(appTemplate.getColumnName() + appTemplate.getArithmetic());
             }
         }
-        queryWrapper.last("rownum =1");
+        queryWrapper.last("and rownum =1");
         ObjectData objectData = objectDataMapper.selectOne(queryWrapper);
         if (null == objectData) {
             return R.failed("未匹配中规则");
