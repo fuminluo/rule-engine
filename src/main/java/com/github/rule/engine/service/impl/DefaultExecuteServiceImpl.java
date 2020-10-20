@@ -1,6 +1,7 @@
 package com.github.rule.engine.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.enums.SqlKeyword;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.github.rule.engine.dto.ExecuteRequest;
 import com.github.rule.engine.entity.ApplicationTemplate;
@@ -36,20 +37,20 @@ public class DefaultExecuteServiceImpl extends AbstractExecuteService {
         Map<String, Object> requestParam = executeRequest.getParam();
         QueryWrapper<ObjectData> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("hash_code", objectDataDTO.getHashCode());
-        queryWrapper.eq( "application_id", objectDataDTO.getApplicationId());
+        queryWrapper.eq("application_id", objectDataDTO.getApplicationId());
         for (ApplicationTemplate appTemplate : applicationTemplates) {
             if (PutTypeEnum.IN.getValue().equals(appTemplate.getInOut())
                     || PutTypeEnum.INOUT.getValue().equals(appTemplate.getInOut())) {
                 Object fieldValue = requestParam.get(appTemplate.getSegmentCode());
-                queryWrapper.apply(appTemplate.getColumnName() + appTemplate.getArithmetic() + fieldValue);
-
+                queryWrapper.apply(appTemplate.getColumnName() + appTemplate.getArithmetic() + "{0}", fieldValue);
             } else if (!StringUtils.isEmpty(appTemplate.getArithmetic())) {
                 queryWrapper.apply(appTemplate.getColumnName() + appTemplate.getArithmetic());
             }
         }
+        queryWrapper.last("rownum =1");
         ObjectData objectData = objectDataMapper.selectOne(queryWrapper);
         if (null == objectData) {
-            R.failed("未匹配中规则");
+            return R.failed("未匹配中规则");
         }
         return R.ok(objectToResult(objectData));
     }

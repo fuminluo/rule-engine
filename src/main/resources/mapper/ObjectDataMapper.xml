@@ -6,6 +6,7 @@
         <result property="id" column="ID" jdbcType="VARCHAR"/>
         <result property="hashCode" column="HASH_CODE" jdbcType="DECIMAL"/>
         <result property="applicationId" column="APPLICATION_ID" jdbcType="VARCHAR"/>
+        <result property="batchGroupId" column="batch_group_id" jdbcType="DECIMAL"/>
         <result property="dateTime" column="DATE_TIME" jdbcType="TIMESTAMP"/>
         <result property="status" column="STATUS" jdbcType="VARCHAR"/>
         <result property="columnChar1" column="COLUMN_CHAR1" jdbcType="VARCHAR"/>
@@ -414,25 +415,25 @@
         <if test='dataList.columnDate1 != null and dataList.columnDate1.size()>0'>
             <foreach collection="dataList.columnDate1" item="item" index="index">
                 INTO t_column_date1 (column_date1)
-                VALUES ( to_timestamp(#{item},'YYYY-MM-DD HH24:MI:SS.FF4'))
+                VALUES ( to_timestamp(#{item},'YYYY-MM-DD HH24:MI:SS.FF3'))
             </foreach>
         </if>
         <if test='dataList.columnDate2 != null and dataList.columnDate2.size()>0'>
             <foreach collection="dataList.columnDate2" item="item" index="index">
                 INTO t_column_date2 (column_date2)
-                VALUES ( to_timestamp(#{item},'YYYY-MM-DD HH24:MI:SS.FF4'))
+                VALUES ( to_timestamp(#{item},'YYYY-MM-DD HH24:MI:SS.FF3'))
             </foreach>
         </if>
         <if test='dataList.columnDate3 != null and dataList.columnDate3.size()>0'>
             <foreach collection="dataList.columnDate3" item="item" index="index">
                 INTO t_column_date3 (column_date3)
-                VALUES ( to_timestamp(#{item},'YYYY-MM-DD HH24:MI:SS.FF4'))
+                VALUES ( to_timestamp(#{item},'YYYY-MM-DD HH24:MI:SS.FF3'))
             </foreach>
         </if>
         <if test='dataList.columnDate4 != null and dataList.columnDate4.size()>0'>
             <foreach collection="dataList.columnDate4" item="item" index="index">
                 INTO t_column_date4 (column_date4)
-                VALUES ( to_timestamp(#{item},'YYYY-MM-DD HH24:MI:SS.FF4'))
+                VALUES ( to_timestamp(#{item},'YYYY-MM-DD HH24:MI:SS.FF3'))
             </foreach>
         </if>
         SELECT * FROM dual
@@ -469,8 +470,8 @@
           column_date4)
        SELECT
           sys_guid(),
-          #{applicationId},
-          #{batchGroupId},
+          #{applicationId,jdbcType=VARCHAR},
+          #{batchGroupId,jdbcType=NUMERIC},
           column_char1,
           column_char2,
           column_char3,
@@ -623,10 +624,10 @@
              t1.column_number4,
              t1.column_number5,
              t1.column_number6,
-             to_char(t1.column_date1, 'YYYY-MM-DD HH24:MI:SS') as column_date1,
-             to_char(t1.column_date2, 'YYYY-MM-DD HH24:MI:SS') as column_date2,
-             to_char(t1.column_date3, 'YYYY-MM-DD HH24:MI:SS') as column_date3,
-             to_char(t1.column_date4, 'YYYY-MM-DD HH24:MI:SS') as column_date4,
+             t1.column_date1,
+             t1.column_date2,
+             t1.column_date3,
+             t1.column_date4,
              decode(t1.status,'0','0-禁用','1','1-启用','2','2-草稿') as status
         FROM t_object_data t1, t_object_data t2,t_object_data_mapping t3
             WHERE t1.hash_code in(SELECT hash_code FROM t_object_data group by hash_code having count(*)>1 )
@@ -657,10 +658,10 @@
              t2.column_number4,
              t2.column_number5,
              t2.column_number6,
-             to_char(t2.column_date1, 'YYYY-MM-DD HH24:MI:SS') as column_date1,
-             to_char(t2.column_date2, 'YYYY-MM-DD HH24:MI:SS') as column_date2,
-             to_char(t2.column_date3, 'YYYY-MM-DD HH24:MI:SS') as column_date3,
-             to_char(t2.column_date4, 'YYYY-MM-DD HH24:MI:SS') as column_date4,
+             t2.column_date1,
+             t2.column_date2,
+             t2.column_date3,
+             t2.column_date4,
              decode(t2.status,'0','0-禁用','1','1-启用','2','2-草稿') as status
         FROM t_object_data t1, t_object_data t2 ,t_object_data_mapping t3
             WHERE  t1.hash_code in(SELECT hash_code FROM t_object_data group by hash_code having count(*)>1 )
@@ -738,7 +739,7 @@
         FROM t_object_data t1
         LEFT JOIN t_object_data_mapping t2
           ON t1.id = t2.id
-            where t1.application_id = #{applicationId}
+            where t1.application_id = #{applicationId} order by t1.date_time
     </select>
 
 
@@ -897,7 +898,7 @@
                        AND v1.status = '1'
                        AND rownum = 1)
               FROM t_object_data t1
-                WHERE t1.application_id = #{applicationId} not exists (select 1 from t_object_data_mapping t2 where t1.id = t2.id);
+                WHERE t1.application_id = #{applicationId} AND NOT EXISTS (select 1 from t_object_data_mapping t2 where t1.id = t2.id)
     </insert>
 
 
@@ -1057,4 +1058,18 @@
               FROM t_object_data t1
              WHERE t1.application_id = #{applicationId} AND u.id = t1.id)
     </update>
+
+    <update id="updateHashcode">
+            update t_object_data t set t.hash_code =
+            ora_hash(t.application_id || t.column_char1 || t.column_char2 || t.column_char3 ||
+            t.column_char4 || t.column_char5 || t.column_char6 ||
+            t.column_char7 || t.column_char8 || t.column_char9 ||
+            t.column_char10 || t.column_char11 || t.column_char12 ||
+            t.column_char13 || t.column_char14 || t.column_char15
+            || t.column_number1 || t.column_number2 || t.column_number3
+            || t.column_number4 || t.column_number5 || t.column_number6)
+             where t.application_id = #{applicationId} and t.hash_code is null
+    </update>
+
+
 </mapper>

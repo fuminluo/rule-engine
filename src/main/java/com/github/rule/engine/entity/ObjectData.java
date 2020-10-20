@@ -28,9 +28,11 @@ public class ObjectData extends Model<ObjectData> {
 
     private String id;
 
-    private String hashCode;
+    private Long hashCode;
 
     private String applicationId;
+
+    private Long batchGroupId;
 
     private LocalDateTime dateTime;
 

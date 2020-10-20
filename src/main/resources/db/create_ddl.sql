@@ -373,20 +373,63 @@ alter table T_VALUE_SET
             maxextents unlimited
             );
 
+
 -- Create table
-create global temporary table T_VALUE_SET_TEMP
+create table T_OBJECT_DATA_MAPPING
 (
-    id                NVARCHAR2(32) not null,
-    application_id    NVARCHAR2(32) not null,
-    value_code        NVARCHAR2(255) not null,
-    data_type         NVARCHAR2(32) not null,
-    remarks           NVARCHAR2(255),
-    status            NVARCHAR2(1) default 1 not null,
-    date_time         TIMESTAMP(6) default systimestamp,
-    segment_name      NVARCHAR2(32),
-    segment_code      NVARCHAR2(64),
-    value_parent_code NVARCHAR2(64),
-    value_name        NVARCHAR2(255),
-    root_id           NVARCHAR2(32)
+    id             NVARCHAR2(32) not null,
+    column_char1   NVARCHAR2(255),
+    column_char2   NVARCHAR2(255),
+    column_char3   NVARCHAR2(255),
+    column_char4   NVARCHAR2(255),
+    column_char5   NVARCHAR2(255),
+    column_char6   NVARCHAR2(255),
+    column_char7   NVARCHAR2(255),
+    column_char8   NVARCHAR2(255),
+    column_char9   NVARCHAR2(255),
+    column_char10  NVARCHAR2(255),
+    column_char11  NVARCHAR2(255),
+    column_char12  NVARCHAR2(255),
+    column_char13  NVARCHAR2(255),
+    column_char14  NVARCHAR2(255),
+    column_char15  NVARCHAR2(255),
+    column_number1 NUMBER,
+    column_number2 NUMBER,
+    column_number3 NUMBER,
+    column_number4 NUMBER,
+    column_number5 NUMBER,
+    column_number6 NUMBER,
+    column_date1   TIMESTAMP(6),
+    column_date2   TIMESTAMP(6),
+    column_date3   TIMESTAMP(6),
+    column_date4   TIMESTAMP(6)
 )
-    on commit delete rows;
+    tablespace USERS
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+(
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+);
+-- Add comments to the table
+comment on table T_OBJECT_DATA_MAPPING
+    is '名称映射表';
+-- Create/Recreate primary, unique and foreign key constraints
+alter table T_OBJECT_DATA_MAPPING
+    add constraint PK_OBJECT_DATA_MAPPING_ID primary key (ID)
+        using index
+            tablespace USERS
+            pctfree 10
+            initrans 2
+            maxtrans 255
+            storage
+            (
+            initial 64K
+            next 1M
+            minextents 1
+            maxextents unlimited
+            );

@@ -77,7 +77,7 @@ public class ValueSetServiceImpl extends ServiceImpl<ValueSetMapper, ValueSet> i
                 return R.failed(excelImportResult.getFailList().toString());
             }
             if (CollectionUtils.isEmpty(excelImportResult.getList())) {
-                return R.failed("导入数据为空");
+               continue;
             }
             String sheetName = workbook.getSheetName(i);
             String[] segments = sheetName.split("-");
