@@ -15,6 +15,9 @@ import com.github.rule.engine.dto.ValueSetExcelDTO;
 import com.github.rule.engine.dto.ValueSetRequest;
 import com.github.rule.engine.entity.Application;
 import com.github.rule.engine.entity.ApplicationTemplate;
+import com.github.rule.engine.entity.ObjectData;
+import com.github.rule.engine.enums.DataTypeEnum;
+import com.github.rule.engine.enums.PutTypeEnum;
 import com.github.rule.engine.mapper.ApplicationMapper;
 import com.github.rule.engine.mapper.ApplicationTemplateMapper;
 import com.github.rule.engine.mapper.ValueSetMapper;
@@ -31,10 +34,9 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.lang.reflect.Field;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 值集表(TValueSet)表服务实现类
@@ -77,7 +79,7 @@ public class ValueSetServiceImpl extends ServiceImpl<ValueSetMapper, ValueSet> i
                 return R.failed(excelImportResult.getFailList().toString());
             }
             if (CollectionUtils.isEmpty(excelImportResult.getList())) {
-               continue;
+                continue;
             }
             String sheetName = workbook.getSheetName(i);
             String[] segments = sheetName.split("-");
@@ -122,6 +124,27 @@ public class ValueSetServiceImpl extends ServiceImpl<ValueSetMapper, ValueSet> i
         }
         Workbook workBook = ExcelExportUtil.exportExcel(sheetsList, ExcelType.HSSF);
         ExcelUtils.downloadExcel(response, workBook, "值集导入模板");
+    }
+
+    @Override
+    public R<?> getJavaField() {
+        Field[] fields = ObjectData.class.getDeclaredFields();
+        List<Field> fieldList = Arrays.asList(fields);
+        List<String> filterFieldCollection = Arrays.asList("id", "hashCode", "applicationId", "batchGroupId", "dateTime", "status");
+        List<String> fieldNames = fieldList.stream().filter(var ->
+                filterFieldCollection.contains(var.getName()) == false
+        ).map(Field::getName).collect(Collectors.toList());
+        return R.ok(fieldNames);
+    }
+
+    @Override
+    public R<?> getJavaType() {
+        return R.ok(DataTypeEnum.getEnumValues());
+    }
+
+    @Override
+    public R<?> getInOutType() {
+        return R.ok(PutTypeEnum.getEnumValues());
     }
 
     private ExcelImportResult getExcelData(MultipartFile file, int sheetIndex) throws Exception {

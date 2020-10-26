@@ -56,7 +56,7 @@ class RuleEngineApplicationTests {
     }
 
     /**
-     * 导入测试 （导入: 27648 条数据  耗时：11494ms）
+     * 导入测试 （导入: 27648 条数据  耗时：10866 ms）
      */
     @Test
     void insertBatch() {
@@ -71,7 +71,7 @@ class RuleEngineApplicationTests {
         insertBatchObjectRequest.setColumnChar6(new ArrayList<String>(Arrays.asList("Y", "N")));
         insertBatchObjectRequest.setColumnNumber1(new ArrayList<BigDecimal>(Arrays.asList(BigDecimal.valueOf(100), BigDecimal.valueOf(200), BigDecimal.valueOf(300), BigDecimal.valueOf(400), BigDecimal.valueOf(500), BigDecimal.valueOf(600))));
         insertBatchObjectRequest.setColumnDate1(new ArrayList<String>(Arrays.asList("2020.1.1")));
-        insertBatchObjectRequest.setColumnDate1(new ArrayList<String>(Arrays.asList("2025.1.1")));
+        insertBatchObjectRequest.setColumnDate2(new ArrayList<String>(Arrays.asList("2025.1.1")));
         int count = objectDataService.insertBatch(insertBatchObjectRequest);
         Long endTime = System.currentTimeMillis();
         System.out.println("导入: " + count + " 条数据" + "  耗时：" + (endTime - startTime) + "ms");

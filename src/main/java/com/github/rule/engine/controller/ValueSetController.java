@@ -43,6 +43,36 @@ public class ValueSetController extends ApiController {
     }
 
     /**
+     * Field 列表接口
+     *
+     * @return
+     */
+    @GetMapping("/java/field")
+    public R<?> getJavaField() {
+        return valueSetService.getJavaField();
+    }
+
+    /**
+     * java 类型 列表接口
+     *
+     * @return
+     */
+    @GetMapping("/java/type")
+    public R<?> getJavaType() {
+        return valueSetService.getJavaType();
+    }
+
+    /**
+     * 输入输出列表接口
+     *
+     * @return
+     */
+    @GetMapping("/inout/type")
+    public R<?> getInOutType() {
+        return valueSetService.getInOutType();
+    }
+
+    /**
      * excel 导入
      *
      * @param file

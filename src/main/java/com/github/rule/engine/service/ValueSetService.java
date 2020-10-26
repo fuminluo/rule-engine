@@ -22,4 +22,10 @@ public interface ValueSetService extends IService<ValueSet> {
     R<?> importValueSet(MultipartFile file, String applicationId) throws Exception;
 
     void getExcelTemplate(String applicationId) throws IOException;
+
+    R<?> getJavaField();
+
+    R<?> getJavaType();
+
+    R<?> getInOutType();
 }

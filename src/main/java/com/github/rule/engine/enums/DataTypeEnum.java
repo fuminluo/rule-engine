@@ -1,13 +1,16 @@
 package com.github.rule.engine.enums;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Admin
  */
 
 public enum DataTypeEnum {
     STRING("String"),
-    DATE("Date"),
-    NUMBER("Number");
+    NUMBER("Number"),
+    DATE("Date");
 
     DataTypeEnum(String value) {
         this.value = value;
@@ -21,5 +24,13 @@ public enum DataTypeEnum {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public static List getEnumValues() {
+        List<String> list = new ArrayList<>();
+        for (DataTypeEnum dataTypeEnum : DataTypeEnum.values()) {
+            list.add(dataTypeEnum.getValue());
+        }
+        return list;
     }
 }
