@@ -33,6 +33,7 @@
         <result property="columnDate1" column="COLUMN_DATE1" jdbcType="TIMESTAMP"/>
         <result property="columnDate2" column="COLUMN_DATE2" jdbcType="TIMESTAMP"/>
         <result property="columnDate3" column="COLUMN_DATE3" jdbcType="TIMESTAMP"/>
+        <result property="columnDate4" column="COLUMN_DATE4" jdbcType="TIMESTAMP"/>
     </resultMap>
 
 
