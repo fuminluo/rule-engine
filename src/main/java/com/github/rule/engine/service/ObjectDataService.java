@@ -51,4 +51,12 @@ public interface ObjectDataService extends IService<ObjectData> {
      * @throws IllegalAccessException
      */
     R getList(String applicationId, Integer currentPage, Integer pageSize) throws NoSuchFieldException, IllegalAccessException;
+
+
+    /**
+     * 写入hashCode 代替触发器方案
+     *
+     * @param applicationId
+     */
+    int updateHashCode(String applicationId);
 }

@@ -23,4 +23,6 @@ public interface ApplicationTemplateMapper extends BaseMapper<ApplicationTemplat
 
     List<ApplicationTemplate> findListByApplicationId(@Param("applicationId") String applicationId);
 
+    List<String> queryColumnName(@Param("applicationId") String applicationId);
+
 }

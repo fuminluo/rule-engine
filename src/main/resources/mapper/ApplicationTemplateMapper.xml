@@ -34,7 +34,12 @@
        WHERE t.id = tt.application_id AND t.id = #{applicationId}
        AND tt.status = '1' AND t.status = '1' ORDER BY tt.order_sort
     </select>
-
+    <select id="queryColumnName" resultType="java.lang.String">
+        SELECT t.column_name
+          FROM t_application_template t
+         WHERE t.in_out IN ('IN', 'INOUT') AND t.column_name not like '%date%'
+          and t.application_id = #{applicationId}
+    </select>
 
 
 </mapper>

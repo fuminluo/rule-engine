@@ -1061,15 +1061,7 @@
     </update>
 
     <update id="updateHashcode">
-            update t_object_data t set t.hash_code =
-            ora_hash(t.application_id || t.column_char1 || t.column_char2 || t.column_char3 ||
-            t.column_char4 || t.column_char5 || t.column_char6 ||
-            t.column_char7 || t.column_char8 || t.column_char9 ||
-            t.column_char10 || t.column_char11 || t.column_char12 ||
-            t.column_char13 || t.column_char14 || t.column_char15
-            || t.column_number1 || t.column_number2 || t.column_number3
-            || t.column_number4 || t.column_number5 || t.column_number6)
-             where t.application_id = #{applicationId} and t.hash_code is null
+           ${sqlStr}
     </update>
 
 

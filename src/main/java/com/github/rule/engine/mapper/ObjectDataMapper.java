@@ -61,5 +61,5 @@ public interface ObjectDataMapper extends BaseMapper<ObjectData> {
 
     int updateMappingBatch(@Param("applicationId") String applicationId);
 
-    int updateHashcode(@Param("applicationId") String applicationId);
+    int updateHashcode(@Param("sqlStr") String sqlStr);
 }

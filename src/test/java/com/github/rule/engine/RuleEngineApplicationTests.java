@@ -77,4 +77,13 @@ class RuleEngineApplicationTests {
         System.out.println("导入: " + count + " 条数据" + "  耗时：" + (endTime - startTime) + "ms");
     }
 
+    /**
+     * 写入hashCode 代替触发器方案
+     */
+    @Test
+    void updateHashCode() {
+
+        objectDataService.updateHashCode("6525D9B9ADBF4C5EA8942607BBEFB985");
+    }
+
 }

@@ -235,7 +235,7 @@ create table T_OBJECT_DATA
     column_date2   TIMESTAMP(6),
     column_date3   TIMESTAMP(6),
     column_date4   TIMESTAMP(6),
-    hash_code      NUMBER not null,
+    hash_code      NUMBER default 1 not null,
     application_id NVARCHAR2(32) not null,
     status         NVARCHAR2(1) default '2' not null,
     date_time      TIMESTAMP(6) default systimestamp not null,

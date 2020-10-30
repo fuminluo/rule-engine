@@ -17,10 +17,12 @@ import com.github.rule.engine.mapper.ApplicationTemplateMapper;
 import com.github.rule.engine.mapper.ObjectDataMapper;
 import com.github.rule.engine.service.AbstractExecuteService;
 import com.github.rule.engine.service.ObjectDataService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -33,6 +35,7 @@ import java.util.stream.Collectors;
  * @author makejava
  * @since 2020-10-08 19:06:57
  */
+@Slf4j
 @Service
 public class ObjectDataServiceImpl extends ServiceImpl<ObjectDataMapper, ObjectData> implements ObjectDataService {
 
@@ -131,5 +134,20 @@ public class ObjectDataServiceImpl extends ServiceImpl<ObjectDataMapper, ObjectD
             resultList.add(value);
         }
         return R.ok(resultList);
+    }
+
+    /**
+     * 写入hashCode 替代触发器
+     *
+     * @param applicationId
+     */
+    @Override
+    @Transactional
+    public int updateHashCode(String applicationId) {
+        List<String> columnNames = applicationTemplateMapper.queryColumnName(applicationId);
+        String sqlStr = "update T_OBJECT_DATA2 set hash_code = ora_hash(%s) where hash_code = 0";
+        sqlStr = String.format(sqlStr, "'" + applicationId + "'" + "||" + columnNames.stream().collect(Collectors.joining("||")));
+        log.info(">>> sqlStr : {}", sqlStr);
+        return objectDataMapper.updateHashcode(sqlStr);
     }
 }
