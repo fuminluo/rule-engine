@@ -59,4 +59,13 @@ public interface ObjectDataService extends IService<ObjectData> {
      * @param applicationId
      */
     int updateHashCode(String applicationId);
+
+    /**
+     * 删除重复数据
+     *
+     * @param applicationId 应用id
+     * @param batchGroupId 批次id
+     * @return
+     */
+    Integer deleteRepeat(String applicationId, Long batchGroupId);
 }

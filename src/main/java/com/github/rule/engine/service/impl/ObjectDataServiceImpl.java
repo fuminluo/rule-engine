@@ -150,4 +150,17 @@ public class ObjectDataServiceImpl extends ServiceImpl<ObjectDataMapper, ObjectD
         log.info(">>> sqlStr : {}", sqlStr);
         return objectDataMapper.updateHashcode(sqlStr);
     }
+
+    /**
+     * 删除重复数据
+     *
+     * @param applicationId 应用id
+     * @param batchGroupId  批次id
+     * @return
+     */
+    @Override
+    @Transactional
+    public Integer deleteRepeat(String applicationId, Long batchGroupId) {
+        return objectDataMapper.deleteRepeat(applicationId, batchGroupId);
+    }
 }

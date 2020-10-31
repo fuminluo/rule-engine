@@ -631,7 +631,8 @@
              t1.column_date4,
              decode(t1.status,'0','0-禁用','1','1-启用','2','2-草稿') as status
         FROM t_object_data t1, t_object_data t2,t_object_data_mapping t3
-            WHERE t1.hash_code in(SELECT hash_code FROM t_object_data group by hash_code having count(*)>1 )
+            WHERE exists(SELECT 1 FROM t_object_data t4 WHERE t1.hash_code =t4.hash_code group by t4.hash_code having count(*)>1)
+            --t1.hash_code in(SELECT hash_code FROM t_object_data group by hash_code having count(*)>1 )
             AND t2.hash_code = t1.hash_code  AND t1.id != t2.id AND t3.id = t1.id
             AND t1.application_id = #{applicationId} AND t2.application_id = #{applicationId}
             AND (t1.column_date1 BETWEEN t2.column_date1 AND t2.column_date2)
@@ -665,7 +666,8 @@
              t2.column_date4,
              decode(t2.status,'0','0-禁用','1','1-启用','2','2-草稿') as status
         FROM t_object_data t1, t_object_data t2 ,t_object_data_mapping t3
-            WHERE  t1.hash_code in(SELECT hash_code FROM t_object_data group by hash_code having count(*)>1 )
+            WHERE  exists(SELECT 1 FROM t_object_data t4 WHERE t1.hash_code =t4.hash_code group by t4.hash_code having count(*)>1)
+             --t1.hash_code in(SELECT hash_code FROM t_object_data group by hash_code having count(*)>1 )
              AND t2.hash_code = t1.hash_code  AND t1.id != t2.id AND t3.id = t2.id
              AND t1.application_id = #{applicationId} AND t2.application_id = #{applicationId}
              AND (t1.column_date2 BETWEEN t2.column_date1 AND t2.column_date2)
@@ -1064,5 +1066,24 @@
            ${sqlStr}
     </update>
 
-
+    <delete id="deleteRepeat">
+         DELETE FROM t_object_data t1
+          WHERE t1.status != '1'
+            AND EXISTS
+          (SELECT 1
+                   FROM t_object_data t2
+                  WHERE t1.hash_code = t2.hash_code and t1.id != t2.id
+                  AND (t1.column_date2 BETWEEN t2.column_date1 AND t2.column_date2
+                  OR t2.column_date2 BETWEEN t1.column_date1 AND t1.column_date2)
+                  GROUP BY t2.hash_code
+                 HAVING(t2.hash_code) > 1)
+            AND t1.rowid NOT IN
+                (SELECT MAX(t3.rowid) FROM t_object_data t3 GROUP BY t3.hash_code)
+                <if test="applicationId !=null and applicationId!=''">
+                   AND t1.application_id = #{applicationId}
+                </if>
+                <if test="batchGroupId != null">
+                    AND t1.batch_group_id = #{batchGroupId}
+                </if>
+    </delete>
 </mapper>

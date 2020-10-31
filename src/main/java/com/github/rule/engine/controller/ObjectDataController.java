@@ -72,6 +72,19 @@ public class ObjectDataController extends ApiController {
     }
 
     /**
+     * 删除重复数据
+     *
+     * @param applicationId 应用id
+     * @param batchGroupId 批次id
+     * @return
+     */
+    @PostMapping("/delete/repeat")
+    public R deleteRepeat(@RequestParam(value = "applicationId") String applicationId,
+                          @RequestParam(value = "batchGroupId") Long batchGroupId) {
+        return R.ok(objectDataService.deleteRepeat(applicationId,batchGroupId));
+    }
+
+    /**
      * 读取详细数据
      *
      * @param applicationId
