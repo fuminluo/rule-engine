@@ -61,16 +61,26 @@ public class ObjectDataController extends ApiController {
     }
 
     /**
-     * 校验是否重复有重复或时间重叠
+     * 校验是否重复有重复或时间重叠(sql)
      *
      * @param applicationId 应用id
      * @return
      */
-    @GetMapping("/validated")
+    @GetMapping("/validatedInSql")
     public R validated(@RequestParam(value = "applicationId") String applicationId) {
         return objectDataService.validated(applicationId);
     }
 
+    /**
+     * 校验是否重复有重复或时间重叠(java)
+     *
+     * @param applicationId 应用id
+     * @return
+     */
+    @GetMapping("/validatedInJava")
+    public R validatedInJava(@RequestParam(value = "applicationId") String applicationId) {
+        return objectDataService.validatedInJava(applicationId);
+    }
     /**
      * 删除重复数据
      *

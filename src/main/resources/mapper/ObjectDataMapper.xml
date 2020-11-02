@@ -745,6 +745,40 @@
             where t1.application_id = #{applicationId} order by t1.date_time
     </select>
 
+    <select id="queryHashCodeRepeat" resultMap="BaseResultMap">
+       select
+            t1.id, t1.hash_code,t1.batch_group_id,
+             t1.column_char1 || nvl2(t1.column_char1, '-' || t3.column_char1, '') AS column_char1,
+             t1.column_char2 || nvl2(t1.column_char2, '-' || t3.column_char2, '') AS column_char2,
+             t1.column_char3 || nvl2(t1.column_char3, '-' || t3.column_char3, '') AS column_char3,
+             t1.column_char4 || nvl2(t1.column_char4, '-' || t3.column_char4, '') AS column_char4,
+             t1.column_char5 || nvl2(t1.column_char5, '-' || t3.column_char5, '') AS column_char5,
+             t1.column_char6 || nvl2(t1.column_char6, '-' || t3.column_char6, '') AS column_char6,
+             t1.column_char7 || nvl2(t1.column_char7, '-' || t3.column_char7, '') AS column_char7,
+             t1.column_char8 || nvl2(t1.column_char8, '-' || t3.column_char8, '') AS column_char8,
+             t1.column_char9 || nvl2(t1.column_char9, '-' || t3.column_char9, '') AS column_char9,
+             t1.column_char10 || nvl2(t1.column_char10, '-' || t3.column_char10, '') AS column_char10,
+             t1.column_char11 || nvl2(t1.column_char11, '-' || t3.column_char11, '') AS column_char11,
+             t1.column_char12 || nvl2(t1.column_char12, '-' || t3.column_char12, '') AS column_char12,
+             t1.column_char13 || nvl2(t1.column_char13, '-' || t3.column_char13, '') AS column_char13,
+             t1.column_char14 || nvl2(t1.column_char14, '-' || t3.column_char14, '') AS column_char14,
+             t1.column_char15 || nvl2(t1.column_char15, '-' || t3.column_char15, '') AS column_char15,
+             t1.column_number1,
+             t1.column_number2,
+             t1.column_number3,
+             t1.column_number4,
+             t1.column_number5,
+             t1.column_number6,
+             t1.column_date1,
+             t1.column_date2,
+             t1.column_date3,
+             t1.column_date4,
+             decode(t1.status,'0','0-禁用','1','1-启用','2','2-草稿') as status
+        from T_OBJECT_DATA t1 , T_OBJECT_DATA_MAPPING t3
+        where  t1.application_id = #{applicationId} AND t1.id = t3.id AND
+        exists(SELECT 1 FROM t_object_data t2 WHERE t1.hash_code =t2.hash_code group by t2.hash_code having count(*)>1)
+    </select>
+
 
     <insert id="insertMappingBatch">
         INSERT INTO t_object_data_mapping
@@ -1067,23 +1101,23 @@
     </update>
 
     <delete id="deleteRepeat">
-         DELETE FROM t_object_data t1
-          WHERE t1.status != '1'
-            AND EXISTS
-          (SELECT 1
-                   FROM t_object_data t2
-                  WHERE t1.hash_code = t2.hash_code and t1.id != t2.id
-                  AND (t1.column_date2 BETWEEN t2.column_date1 AND t2.column_date2
-                  OR t2.column_date2 BETWEEN t1.column_date1 AND t1.column_date2)
-                  GROUP BY t2.hash_code
-                 HAVING(t2.hash_code) > 1)
-            AND t1.rowid NOT IN
-                (SELECT MAX(t3.rowid) FROM t_object_data t3 GROUP BY t3.hash_code)
-                <if test="applicationId !=null and applicationId!=''">
-                   AND t1.application_id = #{applicationId}
-                </if>
-                <if test="batchGroupId != null">
-                    AND t1.batch_group_id = #{batchGroupId}
-                </if>
+        DELETE FROM t_object_data t1
+        WHERE t1.status != '1'
+        AND EXISTS
+        (SELECT 1
+        FROM t_object_data t2
+        WHERE t1.hash_code = t2.hash_code and t1.id != t2.id
+        AND (t1.column_date2 BETWEEN t2.column_date1 AND t2.column_date2
+        OR t2.column_date2 BETWEEN t1.column_date1 AND t1.column_date2)
+        GROUP BY t2.hash_code
+        HAVING(t2.hash_code) > 1)
+       /* AND t1.rowid NOT IN
+        (SELECT MAX(t3.rowid) FROM t_object_data t3 GROUP BY t3.hash_code)*/
+        <if test="applicationId !=null and applicationId!=''">
+            AND t1.application_id = #{applicationId}
+        </if>
+        <if test="batchGroupId != null">
+            AND t1.batch_group_id = #{batchGroupId}
+        </if>
     </delete>
 </mapper>

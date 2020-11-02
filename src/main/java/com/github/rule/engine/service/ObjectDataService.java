@@ -33,12 +33,20 @@ public interface ObjectDataService extends IService<ObjectData> {
     Integer insertBatch(InsertBatchObjectRequest insertBatchObjectRequest);
 
     /**
-     * 校验是否重复有重复或时间重叠
+     * 校验是否重复有重复或时间重叠(sql)
      *
      * @param applicationId 应用id
      * @return
      */
     R validated(String applicationId);
+
+    /**
+     * 校验是否重复有重复或时间重叠(java)
+     *
+     * @param applicationId 应用id
+     * @return
+     */
+    R validatedInJava(String applicationId);
 
     /**
      * 读取详细数据
@@ -64,7 +72,7 @@ public interface ObjectDataService extends IService<ObjectData> {
      * 删除重复数据
      *
      * @param applicationId 应用id
-     * @param batchGroupId 批次id
+     * @param batchGroupId  批次id
      * @return
      */
     Integer deleteRepeat(String applicationId, Long batchGroupId);

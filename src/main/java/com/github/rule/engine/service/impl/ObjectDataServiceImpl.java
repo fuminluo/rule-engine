@@ -25,6 +25,8 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Field;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -94,9 +96,50 @@ public class ObjectDataServiceImpl extends ServiceImpl<ObjectDataMapper, ObjectD
         //校验逻辑因业务差异需要自己实现
         List<ObjectData> objectDataList = objectDataMapper.queryRepeat(applicationId);
         if (CollectionUtils.isEmpty(objectDataList)) {
-            return R.failed("无重复数据");
+            return R.ok("无重复数据");
         }
+        log.info(" >>> sql重复数据：{}", objectDataList.size());
         return R.ok(objectDataList);
+    }
+
+    /**
+     * 校验是否重复有重复或时间重叠(java)
+     *
+     * @param applicationId 应用id
+     * @return
+     */
+    @Override
+    public R validatedInJava(String applicationId) {
+        List<ObjectData> objectDataList = objectDataMapper.queryHashCodeRepeat(applicationId);
+        if (CollectionUtils.isEmpty(objectDataList)) {
+            return R.ok("无重复数据");
+        }
+        log.info("重复数据行数 ：{}", objectDataList.size());
+        Map<Long, List<ObjectData>> objectDataListMap = objectDataList.stream().collect(Collectors.groupingBy(ObjectData::getHashCode));
+        log.info("objectDataListMap size ：{}", objectDataListMap.size());
+        Set<ObjectData> errorSet = new HashSet<>(objectDataList.size());
+        //分组后 可以使用多线程运算相同hashcode的分组进行比较
+        for (Map.Entry<Long, List<ObjectData>> entry : objectDataListMap.entrySet()) {
+            List<ObjectData> objList = entry.getValue();
+            for (ObjectData oriObj : objList) {
+                for (ObjectData tarObj : objList) {
+                    if (!oriObj.getId().equals(tarObj.getId())) {
+                        if (compare(oriObj.getColumnDate1(), tarObj.getColumnDate1(), tarObj.getColumnDate2())
+                                || compare(oriObj.getColumnDate2(), tarObj.getColumnDate1(), tarObj.getColumnDate2())) {
+                            errorSet.add(oriObj);
+                            errorSet.add(tarObj);
+                        }
+                    }
+                }
+            }
+        }
+        log.info(">>> java重复数据：{}", errorSet.size());
+        return R.ok(errorSet);
+    }
+
+
+    private static Boolean compare(LocalDateTime time, LocalDateTime lowerTime, LocalDateTime upperTime) {
+        return (time.isAfter(lowerTime) && time.isBefore(upperTime)) || (time.isEqual(lowerTime) || time.isEqual(upperTime));
     }
 
     /**

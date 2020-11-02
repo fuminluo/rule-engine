@@ -63,15 +63,15 @@ class RuleEngineApplicationTests {
         Long startTime = System.currentTimeMillis();
         InsertBatchObjectRequest insertBatchObjectRequest = new InsertBatchObjectRequest();
         insertBatchObjectRequest.setApplicationId("6525D9B9ADBF4C5EA8942607BBEFB985");
-        insertBatchObjectRequest.setColumnChar1(new ArrayList<String>(Arrays.asList("A001", "A002")));
+        insertBatchObjectRequest.setColumnChar1(new ArrayList<String>(Arrays.asList("A003", "A004")));
         insertBatchObjectRequest.setColumnChar2(new ArrayList<String>(Arrays.asList("B001", "B002", "B003", "B004", "B005", "B006", "B007", "B008", "B009", "B0010", "B0011", "B0012", "B0013", "B0014", "B0015", "B0016")));
         insertBatchObjectRequest.setColumnChar3(new ArrayList<String>(Arrays.asList("C001", "C002", "C003", "C004", "C005", "C006")));
         insertBatchObjectRequest.setColumnChar4(new ArrayList<String>(Arrays.asList("D001", "D002", "D003", "D004")));
-        insertBatchObjectRequest.setColumnChar5(new ArrayList<String>(Arrays.asList("CNY", "USD", "GBF")));
-        insertBatchObjectRequest.setColumnChar6(new ArrayList<String>(Arrays.asList("Y", "N")));
-        insertBatchObjectRequest.setColumnNumber1(new ArrayList<BigDecimal>(Arrays.asList(BigDecimal.valueOf(100), BigDecimal.valueOf(200), BigDecimal.valueOf(300), BigDecimal.valueOf(400), BigDecimal.valueOf(500), BigDecimal.valueOf(600))));
-        insertBatchObjectRequest.setColumnDate1(new ArrayList<String>(Arrays.asList("2020.1.1")));
-        insertBatchObjectRequest.setColumnDate2(new ArrayList<String>(Arrays.asList("2025.1.1")));
+        insertBatchObjectRequest.setColumnChar5(new ArrayList<String>(Arrays.asList("CNY")));
+        insertBatchObjectRequest.setColumnChar6(new ArrayList<String>(Arrays.asList("Y")));
+        insertBatchObjectRequest.setColumnNumber1(new ArrayList<BigDecimal>(Arrays.asList(BigDecimal.valueOf(100))));
+        insertBatchObjectRequest.setColumnDate1(new ArrayList<String>(Arrays.asList("2010.1.1")));
+        insertBatchObjectRequest.setColumnDate2(new ArrayList<String>(Arrays.asList("2012.1.1")));
         int count = objectDataService.insertBatch(insertBatchObjectRequest);
         Long endTime = System.currentTimeMillis();
         System.out.println("导入: " + count + " 条数据" + "  耗时：" + (endTime - startTime) + "ms");
@@ -85,5 +85,30 @@ class RuleEngineApplicationTests {
 
         objectDataService.updateHashCode("6525D9B9ADBF4C5EA8942607BBEFB985");
     }
+
+
+    /**
+     * 导入测试 （导入: 27648 条数据  耗时：10866 ms）
+     */
+    @Test
+    void insertBatch2() {
+        Long startTime = System.currentTimeMillis();
+        InsertBatchObjectRequest insertBatchObjectRequest = new InsertBatchObjectRequest();
+        insertBatchObjectRequest.setApplicationId("6525D9B9ADBF4C5EA8942607BBEFB985");
+        insertBatchObjectRequest.setColumnChar1(new ArrayList<String>(Arrays.asList("A001")));
+        insertBatchObjectRequest.setColumnChar2(new ArrayList<String>(Arrays.asList("B001")));
+        insertBatchObjectRequest.setColumnChar3(new ArrayList<String>(Arrays.asList("C001")));
+        insertBatchObjectRequest.setColumnChar4(new ArrayList<String>(Arrays.asList("D001")));
+        insertBatchObjectRequest.setColumnChar5(new ArrayList<String>(Arrays.asList("CNY")));
+        insertBatchObjectRequest.setColumnChar6(new ArrayList<String>(Arrays.asList("N")));
+        insertBatchObjectRequest.setColumnNumber1(new ArrayList<BigDecimal>(Arrays.asList(BigDecimal.valueOf(150))));
+        insertBatchObjectRequest.setColumnDate1(new ArrayList<String>(Arrays.asList("1997.1.1")));
+        insertBatchObjectRequest.setColumnDate2(new ArrayList<String>(Arrays.asList("1998.1.1")));
+        int count = objectDataService.insertBatch(insertBatchObjectRequest);
+        Long endTime = System.currentTimeMillis();
+        System.out.println("导入: " + count + " 条数据" + "  耗时：" + (endTime - startTime) + "ms");
+    }
+
+
 
 }

@@ -51,6 +51,8 @@ public interface ObjectDataMapper extends BaseMapper<ObjectData> {
 
     List<ObjectData> queryRepeat(@Param("applicationId") String applicationId);
 
+    List<ObjectData> queryHashCodeRepeat(@Param("applicationId") String applicationId);
+
     int queryRepeatCount(@Param("applicationId") String applicationId);
 
 
