@@ -26,7 +26,7 @@ import java.util.UUID;
  */
 @Slf4j
 @RestController
-@RequestMapping("objectData")
+@RequestMapping("/objectData")
 public class ObjectDataController extends ApiController {
     /**
      * 服务对象
