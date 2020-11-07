@@ -2,6 +2,7 @@ package com.github.rule.engine.service;
 
 import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.github.rule.engine.dto.LabelDTO;
 import com.github.rule.engine.dto.ValueSetRequest;
 import com.github.rule.engine.entity.ValueSet;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,4 +29,10 @@ public interface ValueSetService extends IService<ValueSet> {
     R<?> getJavaType();
 
     R<?> getInOutType();
+
+    List<LabelDTO> findSegmentLabel();
+
+    List<LabelDTO> getColumnName();
+
+    List<LabelDTO> getcolumnType();
 }

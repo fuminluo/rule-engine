@@ -3,11 +3,9 @@ package com.github.rule.engine.controller;
 import com.baomidou.mybatisplus.extension.api.ApiController;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.github.rule.engine.entity.ApplicationTemplate;
+import com.github.rule.engine.entity.ValueSet;
 import com.github.rule.engine.service.ApplicationTemplateService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -46,6 +44,18 @@ public class ApplicationTemplateController extends ApiController {
     @GetMapping("/in-param/{applicationId}")
     public R<?> getInParam(@PathVariable String applicationId) {
         return R.ok(applicationTemplateService.getInParam(applicationId));
+    }
+
+
+    /**
+     * 修改数据
+     *
+     * @param applicationTemplate 实体对象
+     * @return 修改结果
+     */
+    @PostMapping("/save")
+    public R saveOrUpdate(@RequestBody ApplicationTemplate applicationTemplate) {
+        return success(this.applicationTemplateService.saveOrUpdate(applicationTemplate));
     }
 
 }

@@ -1,5 +1,8 @@
 package com.github.rule.engine.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
@@ -22,6 +25,7 @@ public class ApplicationTemplate extends Model<ApplicationTemplate> implements S
     /**
      * 配置id
      */
+    @TableId(value = "id",type = IdType.UUID)
     private String id;
     /**
      * 段值编码
@@ -52,7 +56,7 @@ public class ApplicationTemplate extends Model<ApplicationTemplate> implements S
      */
     private String customSql;
     /**
-     * 断值数据类型:字符、数字、时间
+     * 段值数据类型:字符、数字、时间
      */
     private String segmentType;
     /**

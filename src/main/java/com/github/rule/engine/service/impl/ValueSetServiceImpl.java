@@ -11,11 +11,13 @@ import cn.afterturn.easypoi.excel.entity.result.ExcelImportResult;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.rule.engine.dto.LabelDTO;
 import com.github.rule.engine.dto.ValueSetExcelDTO;
 import com.github.rule.engine.dto.ValueSetRequest;
 import com.github.rule.engine.entity.Application;
 import com.github.rule.engine.entity.ApplicationTemplate;
 import com.github.rule.engine.entity.ObjectData;
+import com.github.rule.engine.enums.DBTypeEnum;
 import com.github.rule.engine.enums.DataTypeEnum;
 import com.github.rule.engine.enums.PutTypeEnum;
 import com.github.rule.engine.mapper.ApplicationMapper;
@@ -134,17 +136,36 @@ public class ValueSetServiceImpl extends ServiceImpl<ValueSetMapper, ValueSet> i
         List<String> fieldNames = fieldList.stream().filter(var ->
                 filterFieldCollection.contains(var.getName()) == false
         ).map(Field::getName).collect(Collectors.toList());
-        return R.ok(fieldNames);
+        List<LabelDTO> labelDTOList = new ArrayList<>(fieldNames.size());
+        fieldNames.forEach(var->{
+            labelDTOList.add(new LabelDTO(var,var));
+        });
+        return R.ok(labelDTOList);
     }
 
     @Override
     public R<?> getJavaType() {
-        return R.ok(DataTypeEnum.getEnumValues());
+        return R.ok(DataTypeEnum.getEnumLabelValues());
     }
 
     @Override
     public R<?> getInOutType() {
-        return R.ok(PutTypeEnum.getEnumValues());
+        return R.ok(PutTypeEnum.getEnumLabelValues());
+    }
+
+    @Override
+    public List<LabelDTO> findSegmentLabel() {
+        return valueSetMapper.findSegmentLabel();
+    }
+
+    @Override
+    public List<LabelDTO> getColumnName() {
+        return valueSetMapper.getColumnName();
+    }
+
+    @Override
+    public List<LabelDTO> getcolumnType() {
+        return DBTypeEnum.getEnumLabelValues();
     }
 
     private ExcelImportResult getExcelData(MultipartFile file, int sheetIndex) throws Exception {

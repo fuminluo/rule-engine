@@ -742,7 +742,12 @@
         FROM t_object_data t1
         LEFT JOIN t_object_data_mapping t2
           ON t1.id = t2.id
-            where t1.application_id = #{applicationId} order by t1.date_time
+            <where>
+                <if test="applicationId != null and applicationId != '' ">
+                    t1.application_id = #{applicationId}
+                </if>
+            </where>
+              order by t1.date_time
     </select>
 
     <select id="queryHashCodeRepeat" resultMap="BaseResultMap">

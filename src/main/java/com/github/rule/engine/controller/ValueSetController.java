@@ -32,15 +32,16 @@ public class ValueSetController extends ApiController {
     private ValueSetService valueSetService;
 
 
-    /**
-     * 值集接口
-     *
-     * @return
-     */
+
     @GetMapping("/segment")
     public R<?> findvalueSet(@ModelAttribute ValueSetRequest valueSetRequest) {
         return valueSetService.findvalueSet(valueSetRequest);
     }
+    @GetMapping("/segment/label")
+    public R<?> findSegmentLabel() {
+        return  R.ok(valueSetService.findSegmentLabel());
+    }
+
 
     /**
      * Field 列表接口
@@ -50,6 +51,26 @@ public class ValueSetController extends ApiController {
     @GetMapping("/java/field")
     public R<?> getJavaField() {
         return valueSetService.getJavaField();
+    }
+
+    /**
+     * columnName 接口
+     *
+     * @return
+     */
+    @GetMapping("/column/name")
+    public R<?> columnName() {
+        return R.ok(valueSetService.getColumnName());
+    }
+
+    /**
+     * columnType 接口
+     *
+     * @return
+     */
+    @GetMapping("/column/type")
+    public R<?> columnType() {
+        return R.ok(valueSetService.getcolumnType());
     }
 
     /**

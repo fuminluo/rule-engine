@@ -46,7 +46,7 @@
 
     <select id="findvalueSet" parameterType="com.github.rule.engine.dto.ValueSetRequest" resultMap="BaseResultMap">
         SELECT
-        VALUE_CODE AS 'value' ,
+        VALUE_CODE AS 'value',
         VALUE_NAME AS label
         FROM T_VALUE_SET
         WHERE
@@ -61,6 +61,25 @@
             and VALUE_PARENT_CODE = #{valueParentCode}
         </if>
 
+    </select>
+    <select id="findSegmentLabel" resultType="com.github.rule.engine.dto.LabelDTO">
+     SELECT
+        SEGMENT_CODE  value ,
+        SEGMENT_NAME  label
+        FROM T_VALUE_SET group by SEGMENT_NAME, SEGMENT_CODE
+    </select>
+    <select id="getColumnName" resultType="com.github.rule.engine.dto.LabelDTO">
+       SELECT t.column_name label,
+        t.column_name VALUE,
+        regexp_replace(t.column_name, '[COLUMN_CHAR_DATE_NUMBER]')
+       FROM user_tab_columns t
+      WHERE t.table_name = 'T_OBJECT_DATA'
+        AND t.column_name NOT IN ('ID',
+                                  'BATCH_GROUP_ID',
+                                  'STATUS',
+                                  'DATE_TIME',
+                                  'APPLICATION_ID',
+                                  'HASH_CODE')
     </select>
 
 
