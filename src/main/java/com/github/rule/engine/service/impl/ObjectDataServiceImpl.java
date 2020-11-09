@@ -16,6 +16,7 @@ import com.github.rule.engine.mapper.ApplicationMapper;
 import com.github.rule.engine.mapper.ApplicationTemplateMapper;
 import com.github.rule.engine.mapper.ObjectDataMapper;
 import com.github.rule.engine.service.AbstractExecuteService;
+import com.github.rule.engine.service.HashCodeService;
 import com.github.rule.engine.service.ObjectDataService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +51,7 @@ public class ObjectDataServiceImpl extends ServiceImpl<ObjectDataMapper, ObjectD
     @Autowired
     ObjectDataMapper objectDataMapper;
 
+
     /**
      * 按维度参数读取规则配置
      *
@@ -60,8 +62,8 @@ public class ObjectDataServiceImpl extends ServiceImpl<ObjectDataMapper, ObjectD
      */
     @Override
     public R execute(ExecuteRequest executeRequest) throws NoSuchFieldException, IllegalAccessException {
-        AbstractExecuteService defaultExecuteObjectData = new DefaultExecuteServiceImpl(executeRequest);
-        R result = defaultExecuteObjectData.doExecute();
+        AbstractExecuteService abstractExecuteService = new DefaultExecuteServiceImpl(executeRequest, new HashCodeServiceImpl());
+        R result = abstractExecuteService.doExecute();
         return result;
     }
 

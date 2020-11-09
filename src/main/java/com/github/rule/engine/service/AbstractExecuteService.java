@@ -33,10 +33,13 @@ public abstract class AbstractExecuteService {
 
     protected ExecuteRequest executeRequest;
 
-    public AbstractExecuteService(ExecuteRequest executeRequest) throws NoSuchFieldException, IllegalAccessException {
+    private HashCodeService hashCodeService;
+
+    public AbstractExecuteService(ExecuteRequest executeRequest, HashCodeService hashCodeService) throws NoSuchFieldException, IllegalAccessException {
         this.executeRequest = executeRequest;
+        this.hashCodeService = hashCodeService;
         convertToEntity();
-        initHashCode();
+        setHashCode();
     }
 
     /**
@@ -66,13 +69,6 @@ public abstract class AbstractExecuteService {
         }
     }
 
-    /**
-     * 计算 hashCode
-     */
-    protected void initHashCode() {
-        Long hashCode = objectDataMapper.queryHashCode(objectDataDTO);
-        objectDataDTO.setHashCode(hashCode);
-    }
 
     protected Map objectToResult(ObjectData objectData) throws NoSuchFieldException, IllegalAccessException {
         Map<String, Object> result = new HashMap<>(12);
@@ -88,6 +84,15 @@ public abstract class AbstractExecuteService {
         }
         return result;
     }
+
+    /**
+     * 计算 hashCode
+     */
+    protected void setHashCode() {
+        objectDataDTO.setHashCode(hashCodeService.getHashCode(objectDataDTO));
+    }
+
+    ;
 
     /**
      * 执行查询

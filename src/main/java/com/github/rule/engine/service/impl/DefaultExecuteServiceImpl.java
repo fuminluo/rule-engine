@@ -8,6 +8,7 @@ import com.github.rule.engine.entity.ApplicationTemplate;
 import com.github.rule.engine.entity.ObjectData;
 import com.github.rule.engine.enums.PutTypeEnum;
 import com.github.rule.engine.service.AbstractExecuteService;
+import com.github.rule.engine.service.HashCodeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -24,9 +25,10 @@ public class DefaultExecuteServiceImpl extends AbstractExecuteService {
 
     protected List<ApplicationTemplate> applicationTemplates;
 
-    public DefaultExecuteServiceImpl(ExecuteRequest executeRequest) throws NoSuchFieldException, IllegalAccessException {
-        super(executeRequest);
+    public DefaultExecuteServiceImpl(ExecuteRequest executeRequest, HashCodeService hashCodeService) throws NoSuchFieldException, IllegalAccessException {
+        super(executeRequest, hashCodeService);
     }
+
 
     @Override
     public R<?> doExecute() throws NoSuchFieldException, IllegalAccessException {
