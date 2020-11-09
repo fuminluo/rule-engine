@@ -6,3 +6,5 @@
 ![avatar](http://chuantu.xyz/t6/741/1604886287x992248267.png)
 ### 录入规则数据
 ![avatar](http://chuantu.xyz/t6/741/1604886336x-1224475230.png)
+### 值集
+![avatar](http://chuantu.xyz/t6/741/1604886868x992249049.jpg)
