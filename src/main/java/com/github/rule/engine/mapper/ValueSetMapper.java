@@ -36,4 +36,12 @@ public interface ValueSetMapper extends BaseMapper<ValueSet> {
     List<LabelDTO> findSegmentLabel();
 
     List<LabelDTO> getColumnName();
+
+    void authority(@Param("userId") String userId);
+
+    Object getUser();
+
+    List test();
+
+    int updateAA();
 }

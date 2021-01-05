@@ -10,7 +10,7 @@ import java.util.List;
  * @author 86186
  */
 @Data
-public  class BaseTreeNode implements Serializable {
+public class BaseTreeNode implements Serializable {
 
     private static final long serialVersionUID = 661466066923789608L;
 
@@ -28,6 +28,7 @@ public  class BaseTreeNode implements Serializable {
      * 层级
      */
     private Integer level;
+
 
     private List<BaseTreeNode> children;
 
