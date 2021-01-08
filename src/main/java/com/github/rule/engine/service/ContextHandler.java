@@ -8,7 +8,7 @@ import com.github.rule.engine.dto.PipelineContext;
  * @Author LuoFuMin
  * @DATE 2021/1/5 16:44
  */
-public interface ContextHandler<T extends PipelineContext> {
+public interface ContextHandler<T> {
     /**
      * 处理输入的上下文数据
      *
