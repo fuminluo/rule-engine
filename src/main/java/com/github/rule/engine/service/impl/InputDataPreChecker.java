@@ -18,7 +18,7 @@ import java.util.Map;
 public class InputDataPreChecker implements ContextHandler<InstanceBuildContext> {
     @Override
     public boolean handle(InstanceBuildContext context) {
-        log.info("--输入数据校验--");
+        log.info("--输入数据校验--"+Thread.currentThread().getId());
         Map<String, Object> formInput = context.getFormInput();
 
         if (MapUtils.isEmpty(formInput)) {

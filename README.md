@@ -1,10 +1,10 @@
 # rule-engine
 
 ###创建应用
-![avatar](http://chuantu.xyz/t6/741/1604886226x-1224475230.png)
+![avatar](src/main/resources/static/应用列表.png)
 ### 动态配置应用模板
-![avatar](http://chuantu.xyz/t6/741/1604886287x992248267.png)
+![avatar](src/main/resources/static/应用列表.png)
 ### 录入规则数据
-![avatar](http://chuantu.xyz/t6/741/1604886336x-1224475230.png)
+![avatar](src/main/resources/static/规则数据.png)
 ### 值集
-![avatar](http://chuantu.xyz/t6/741/1604886868x992249049.jpg)
+![avatar](src/main/resources/static/值集列表.jpg)

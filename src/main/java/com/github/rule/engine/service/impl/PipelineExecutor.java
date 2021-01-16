@@ -1,5 +1,6 @@
 package com.github.rule.engine.service.impl;
 
+import com.github.rule.engine.dto.LatchPipelineContext;
 import com.github.rule.engine.dto.PipelineContext;
 import com.github.rule.engine.service.ContextHandler;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +13,8 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 
 /**
@@ -44,7 +47,7 @@ public class PipelineExecutor {
      * @param context 输入的上下文数据
      * @return 处理过程中管道是否畅通，畅通返回 true，不畅通返回 false
      */
-    public boolean acceptSync(PipelineContext context) {
+    public boolean acceptSync(PipelineContext context) throws InterruptedException {
         Objects.requireNonNull(context, "上下文数据不能为 null");
         // 拿到数据类型
         Class<? extends PipelineContext> dataType = context.getClass();
@@ -59,7 +62,7 @@ public class PipelineExecutor {
         for (ContextHandler<? super PipelineContext> handler : pipeline) {
             try {
                 // 当前处理器处理数据，并返回是否继续向下处理
-                lastSuccess = handler.handle(context);
+                handler.handle(context);
             } catch (Throwable ex) {
                 lastSuccess = false;
                 log.error("[{}] 处理异常，handler={}", context.getName(), handler.getClass().getSimpleName(), ex);
@@ -110,20 +113,45 @@ public class PipelineExecutor {
     }
 
 
-
     /**
      * 异步处理输入的上下文数据
      *
      * @param context  上下文数据
      * @param callback 处理完成的回调
      */
-    public void acceptAsync(PipelineContext context, BiConsumer<PipelineContext, Boolean> callback) {
+    public void acceptAsync2(PipelineContext context, BiConsumer<PipelineContext, Boolean> callback) {
         pipelineThreadPool.execute(() -> {
-            boolean success = acceptSync(context);
+            boolean success = false;
+            try {
+                success = acceptSync(context);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
             if (callback != null) {
                 callback.accept(context, success);
             }
         });
+    }
+
+    /**
+     * 异步处理输入的上下文数据
+     *
+     * @param context 上下文数据
+     */
+    public boolean acceptConcurrentSync(LatchPipelineContext context, List<? extends ContextHandler<? super LatchPipelineContext>> contextHandlers) throws InterruptedException {
+        Objects.requireNonNull(context, "上下文数据不能为 null");
+        CountDownLatch latch = new CountDownLatch(contextHandlers.size());
+        context.setLatch(latch);
+        // 管道是否畅通
+        for (ContextHandler<? super LatchPipelineContext> handler : contextHandlers) {
+            // 当前处理器处理数据，并返回是否继续向下处理
+            pipelineThreadPool.execute(() -> {
+                handler.handle(context);
+            });
+        }
+        latch.await(context.getWaitTime(), TimeUnit.SECONDS);
+        context.getErrorMsg();
+        return true;
     }
 }

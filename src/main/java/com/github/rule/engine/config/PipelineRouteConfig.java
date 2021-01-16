@@ -6,7 +6,6 @@ import com.github.rule.engine.service.ContextHandler;
 import com.github.rule.engine.service.impl.InputDataPreChecker;
 import com.github.rule.engine.service.impl.ModelInstanceCreator;
 import com.github.rule.engine.service.impl.ModelInstanceSaver;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -38,7 +37,7 @@ public class PipelineRouteConfig implements ApplicationContextAware {
      */
     private static final
     Map<Class<? extends PipelineContext>, List<Class<? extends ContextHandler<? extends PipelineContext>>>>
-            PIPELINE_ROUTE_MAP = new HashMap<>(4);
+            PIPELINE_ROUTE_MAP = new HashMap<>(8);
 
     /*
      * 在这里配置各种上下文类型对应的处理管道：键为上下文类型，值为处理器类型的列表

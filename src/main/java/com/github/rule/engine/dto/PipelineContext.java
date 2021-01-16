@@ -2,6 +2,7 @@ package com.github.rule.engine.dto;
 
 
 import java.time.LocalDateTime;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * 传递到管道的上下文
@@ -21,12 +22,14 @@ public class PipelineContext {
      */
     private LocalDateTime endTime;
 
+
+
     /**
      * 错误信息
      */
-    private StringBuilder errorMsg;
+    private volatile StringBuilder errorMsg;
 
-    public void setErrorMsg(String msg) {
+    public void addErrorMsg(String msg) {
         if (null == this.errorMsg) {
             this.errorMsg = new StringBuilder();
         }
@@ -34,7 +37,7 @@ public class PipelineContext {
     }
 
     public String getErrorMsg() {
-        if (null == this.errorMsg.toString()) {
+        if (null == this.errorMsg) {
             return "";
         }
         return this.errorMsg.toString();
@@ -62,4 +65,6 @@ public class PipelineContext {
     public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
     }
+
+
 }
