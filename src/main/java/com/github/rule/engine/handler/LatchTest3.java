@@ -1,7 +1,7 @@
-package com.github.rule.engine.service.impl;
+package com.github.rule.engine.handler;
 
 import com.github.rule.engine.dto.LatchPipelineContext;
-import com.github.rule.engine.service.ContextHandler;
+import com.github.rule.engine.handler.ContextHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 

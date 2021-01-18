@@ -23,6 +23,17 @@ public class PipelineContext {
     private LocalDateTime endTime;
 
 
+    private volatile boolean handleResult = true;
+
+    public boolean isHandleResult() {
+        return handleResult;
+    }
+
+    public synchronized void setHandleResult(boolean handleResult) {
+        this.handleResult = handleResult;
+    }
+
+
 
     /**
      * 错误信息

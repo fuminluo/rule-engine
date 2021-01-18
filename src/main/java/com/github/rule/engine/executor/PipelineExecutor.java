@@ -1,12 +1,12 @@
-package com.github.rule.engine.service.impl;
+package com.github.rule.engine.executor;
 
 import com.github.rule.engine.dto.LatchPipelineContext;
 import com.github.rule.engine.dto.PipelineContext;
-import com.github.rule.engine.service.ContextHandler;
+import com.github.rule.engine.handler.ContextHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
@@ -16,6 +16,7 @@ import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 /**
  * 管道执行器
@@ -25,7 +26,7 @@ import java.util.function.BiConsumer;
  */
 @Slf4j
 @Service
-public class PipelineExecutor {
+public class PipelineExecutor implements Executor {
 
     /**
      * 管道线程池
@@ -47,7 +48,9 @@ public class PipelineExecutor {
      * @param context 输入的上下文数据
      * @return 处理过程中管道是否畅通，畅通返回 true，不畅通返回 false
      */
-    public boolean acceptSync(PipelineContext context) throws InterruptedException {
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean acceptSync(PipelineContext context) {
         Objects.requireNonNull(context, "上下文数据不能为 null");
         // 拿到数据类型
         Class<? extends PipelineContext> dataType = context.getClass();
@@ -84,6 +87,8 @@ public class PipelineExecutor {
      * @param context 输入的上下文数据
      * @return 处理过程中管道是否畅通，畅通返回 true，不畅通返回 false
      */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean acceptSync(PipelineContext context, List<? extends ContextHandler<? super PipelineContext>> contextHandlers) {
         Objects.requireNonNull(context, "上下文数据不能为 null");
         // 获取数据处理管道
@@ -113,32 +118,15 @@ public class PipelineExecutor {
     }
 
 
-    /**
-     * 异步处理输入的上下文数据
-     *
-     * @param context  上下文数据
-     * @param callback 处理完成的回调
-     */
-    public void acceptAsync2(PipelineContext context, BiConsumer<PipelineContext, Boolean> callback) {
-        pipelineThreadPool.execute(() -> {
-            boolean success = false;
-            try {
-                success = acceptSync(context);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
 
-            if (callback != null) {
-                callback.accept(context, success);
-            }
-        });
-    }
 
     /**
      * 异步处理输入的上下文数据
      *
      * @param context 上下文数据
      */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean acceptConcurrentSync(LatchPipelineContext context, List<? extends ContextHandler<? super LatchPipelineContext>> contextHandlers) throws InterruptedException {
         Objects.requireNonNull(context, "上下文数据不能为 null");
         CountDownLatch latch = new CountDownLatch(contextHandlers.size());
@@ -153,5 +141,18 @@ public class PipelineExecutor {
         latch.await(context.getWaitTime(), TimeUnit.SECONDS);
         context.getErrorMsg();
         return true;
+    }
+
+    /**
+     * 函数同步处理
+     *
+     * @param context  输入的上下文数据
+     * @param consumer 处理函数
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean acceptSync(PipelineContext context, Consumer<? super PipelineContext> consumer) {
+        consumer.accept(context);
+        return context.isHandleResult();
     }
 }

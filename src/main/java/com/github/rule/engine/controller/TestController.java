@@ -5,8 +5,9 @@ import com.github.rule.engine.dto.InstanceBuildContext;
 import com.github.rule.engine.dto.LatchPipelineContext;
 import com.github.rule.engine.dto.OptionDTO;
 import com.github.rule.engine.dto.PipelineContext;
-import com.github.rule.engine.service.ContextHandler;
-import com.github.rule.engine.service.impl.*;
+import com.github.rule.engine.executor.Executor;
+import com.github.rule.engine.executor.PipelineExecutor;
+import com.github.rule.engine.handler.*;
 import com.github.rule.engine.utils.SpringContextUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * @Author LuoFuMin
@@ -59,4 +61,35 @@ public class TestController {
         pipelineExecutor.acceptSync(data, (List<? extends ContextHandler<? super PipelineContext>>) list);
         return data;
     }
+
+    @GetMapping("/test3")
+    public Object test3() throws InterruptedException {
+        InstanceBuildContext pipelineContext = new InstanceBuildContext();
+        Map<String, List<? extends ContextHandler<? super PipelineContext>>> datas = new HashMap<>(8);
+        List<? extends ContextHandler<? extends PipelineContext>> list =
+                Arrays.asList(SpringContextUtils.getBean(InputDataPreChecker.class));
+        datas.put("handler", (List<? extends ContextHandler<? super PipelineContext>>) list);
+        Consumer<PipelineContext> consumer = context -> {
+            datas.forEach((k, v) -> {
+                v.forEach(var -> {
+                    if (context.isHandleResult()) {
+                        try {
+                            if (!var.handle(context)) {
+                                context.setHandleResult(false);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            context.setHandleResult(false);
+                        }
+
+                    }
+                });
+            });
+        };
+        Executor executor = SpringContextUtils.getBean(PipelineExecutor.class);
+        executor.acceptSync(pipelineContext, consumer);
+        return pipelineContext;
+    }
+
+
 }
