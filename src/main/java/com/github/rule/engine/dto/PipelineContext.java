@@ -25,7 +25,7 @@ public class PipelineContext {
 
     private volatile boolean handleResult = true;
 
-    public boolean isHandleResult() {
+    public boolean getHandleResult() {
         return handleResult;
     }
 
@@ -33,7 +33,12 @@ public class PipelineContext {
         this.handleResult = handleResult;
     }
 
+    private CountDownLatch latch;
 
+    /**
+     * 等待时间 单位秒
+     */
+    private Integer waitTime;
 
     /**
      * 错误信息
@@ -78,4 +83,19 @@ public class PipelineContext {
     }
 
 
+    public CountDownLatch getLatch() {
+        return latch;
+    }
+
+    public void setLatch(CountDownLatch latch) {
+        this.latch = latch;
+    }
+
+    public Integer getWaitTime() {
+        return waitTime;
+    }
+
+    public void setWaitTime(Integer waitTime) {
+        this.waitTime = waitTime;
+    }
 }

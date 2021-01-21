@@ -66,13 +66,13 @@ public class TestController {
     public Object test3() throws InterruptedException {
         InstanceBuildContext pipelineContext = new InstanceBuildContext();
         Map<String, List<? extends ContextHandler<? super PipelineContext>>> datas = new HashMap<>(8);
-        List<? extends ContextHandler<? extends PipelineContext>> list =
+        List list =
                 Arrays.asList(SpringContextUtils.getBean(InputDataPreChecker.class));
         datas.put("handler", (List<? extends ContextHandler<? super PipelineContext>>) list);
         Consumer<PipelineContext> consumer = context -> {
             datas.forEach((k, v) -> {
                 v.forEach(var -> {
-                    if (context.isHandleResult()) {
+                    if (context.getHandleResult()) {
                         try {
                             if (!var.handle(context)) {
                                 context.setHandleResult(false);

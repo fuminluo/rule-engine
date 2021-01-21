@@ -8,22 +8,14 @@ import java.util.concurrent.CountDownLatch;
  */
 public class LatchPipelineContext extends PipelineContext {
 
-    private CountDownLatch latch;
 
     private Boolean isContinue = true;
 
     /**
      * 等待时间 单位秒
      */
-    private Integer waitTime;
 
-    public CountDownLatch getLatch() {
-        return latch;
-    }
 
-    public void setLatch(CountDownLatch latch) {
-        this.latch = latch;
-    }
 
     public Boolean getIsContinue() {
         return isContinue;
@@ -33,11 +25,4 @@ public class LatchPipelineContext extends PipelineContext {
         this.isContinue = aContinue;
     }
 
-    public Integer getWaitTime() {
-        return waitTime;
-    }
-
-    public void setWaitTime(Integer waitTime) {
-        this.waitTime = waitTime;
-    }
 }

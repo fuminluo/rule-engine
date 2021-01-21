@@ -2,6 +2,7 @@ package com.github.rule.engine.executor;
 
 import com.github.rule.engine.dto.LatchPipelineContext;
 import com.github.rule.engine.dto.PipelineContext;
+import com.github.rule.engine.handler.AbstractContextHandler;
 import com.github.rule.engine.handler.ContextHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -153,6 +154,52 @@ public class PipelineExecutor implements Executor {
     @Transactional(rollbackFor = Exception.class)
     public boolean acceptSync(PipelineContext context, Consumer<? super PipelineContext> consumer) {
         consumer.accept(context);
-        return context.isHandleResult();
+        return context.getHandleResult();
+    }
+
+
+    /**
+     * 并发处理方法
+     *
+     * @param context 上下文数据
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean executeConcurrent(PipelineContext context, List<? extends AbstractContextHandler<? super PipelineContext>> contextHandlers) throws InterruptedException {
+        Objects.requireNonNull(context, "上下文数据不能为 null");
+        CountDownLatch latch = new CountDownLatch(contextHandlers.size());
+        context.setLatch(latch);
+        // 管道是否畅通
+        for (AbstractContextHandler handler : contextHandlers) {
+            // 当前处理器处理数据，并返回是否继续向下处理
+            pipelineThreadPool.execute(() -> {
+                handler.doHandler(context);
+            });
+        }
+        latch.await(context.getWaitTime(), TimeUnit.SECONDS);
+        context.getErrorMsg();
+        return true;
+    }
+
+    /**
+     * 增强型处理方法
+     *
+     * @param context 上下文数据
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean execute(PipelineContext context, List<? extends AbstractContextHandler<? super PipelineContext>> contextHandlers) {
+        Objects.requireNonNull(context, "上下文数据不能为 null");
+        boolean lastSuccess = true;
+        for (AbstractContextHandler handler : contextHandlers) {
+            // 当前处理器处理数据，并返回是否继续向下处理
+            lastSuccess = handler.doHandler(context);
+            // 不再向下处理
+            if (!lastSuccess) {
+                log.error("errorMsg : {}", context.getErrorMsg());
+                break;
+            }
+        }
+        return lastSuccess;
     }
 }

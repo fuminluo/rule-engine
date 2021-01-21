@@ -3,6 +3,7 @@ package com.github.rule.engine.executor;
 
 import com.github.rule.engine.dto.LatchPipelineContext;
 import com.github.rule.engine.dto.PipelineContext;
+import com.github.rule.engine.handler.AbstractContextHandler;
 import com.github.rule.engine.handler.ContextHandler;
 
 import java.util.List;
@@ -41,4 +42,18 @@ public interface Executor {
      */
     boolean acceptSync(PipelineContext context, List<? extends ContextHandler<? super PipelineContext>> contextHandlers);
 
+    /**
+     * 并发处理方法
+     *
+     * @param context 上下文数据
+     */
+    boolean executeConcurrent(PipelineContext context, List<? extends AbstractContextHandler<? super PipelineContext>> contextHandlers) throws InterruptedException;
+
+
+    /**
+     * 增强型处理方法
+     *
+     * @param context 上下文数据
+     */
+    boolean execute(PipelineContext context, List<? extends AbstractContextHandler<? super PipelineContext>> contextHandlers);
 }

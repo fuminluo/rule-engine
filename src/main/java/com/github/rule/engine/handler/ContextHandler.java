@@ -1,13 +1,15 @@
 package com.github.rule.engine.handler;
 
 
+import com.github.rule.engine.dto.PipelineContext;
+
 /**
  * 管道中的上下文处理器
  *
  * @Author LuoFuMin
  * @DATE 2021/1/5 16:44
  */
-public interface ContextHandler<T> {
+public interface ContextHandler<T extends PipelineContext> {
     /**
      * 处理输入的上下文数据
      *
