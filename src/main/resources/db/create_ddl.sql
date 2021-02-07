@@ -577,6 +577,7 @@ alter table T_VIEW
             maxextents unlimited
             );
 
+
 -- Create table
 create table T_COLUMN_DEF
 (
@@ -584,7 +585,7 @@ create table T_COLUMN_DEF
     column_id    NVARCHAR2(60) not null,
     show_name    NVARCHAR2(200) not null,
     sql_function NVARCHAR2(30),
-    sort_order   NUMBER(4),
+    order_sort   NUMBER(4),
     show_code    NVARCHAR2(200) not null,
     is_show      NUMBER(1) default 1
 )
@@ -599,16 +600,23 @@ comment on column T_COLUMN_DEF.show_name
     is '前端展示名称';
 comment on column T_COLUMN_DEF.sql_function
     is '函数方法';
-comment on column T_COLUMN_DEF.sort_order
+comment on column T_COLUMN_DEF.order_sort
     is '排序字段';
 comment on column T_COLUMN_DEF.show_code
     is '前端展示代码';
 comment on column T_COLUMN_DEF.is_show
     is '前端是否显示：1-显示示，0-隐藏';
+-- Create/Recreate indexes
+create index ORDER_SORT01 on T_COLUMN_DEF (ORDER_SORT)
+    tablespace ROOT_SPACE
+    pctfree 10
+    initrans 2
+    maxtrans 255;
 -- Create/Recreate primary, unique and foreign key constraints
 alter table T_COLUMN_DEF
     add constraint COLUMN_ID001 foreign key (COLUMN_ID)
         references T_COLUMN (ID) on delete set null;
+
 
 -- Create table
 create table T_VIEW_COLUMN_DEF
