@@ -433,3 +433,201 @@ alter table T_OBJECT_DATA_MAPPING
             minextents 1
             maxextents unlimited
             );
+
+
+-- Create table
+create table T_COLUMN
+(
+    id          NVARCHAR2(32) default sys_guid() not null,
+    column_code NVARCHAR2(30) not null,
+    column_name NVARCHAR2(64) not null,
+    table_name  NVARCHAR2(30) not null,
+    data_type   NVARCHAR2(16) not null,
+    source_data NVARCHAR2(200),
+    source_type NVARCHAR2(32)
+)
+    tablespace ROOT_SPACE
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+(
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+);
+-- Add comments to the table
+comment on table T_COLUMN
+    is '字段定义表';
+-- Add comments to the columns
+comment on column T_COLUMN.id
+    is '主键';
+comment on column T_COLUMN.column_code
+    is '列编码';
+comment on column T_COLUMN.column_name
+    is '列名称';
+comment on column T_COLUMN.table_name
+    is '表名';
+comment on column T_COLUMN.data_type
+    is '数据类型：N-数值，C-金额，I-整数，S-字符串，D-日期';
+comment on column T_COLUMN.source_data
+    is '数据源';
+comment on column T_COLUMN.source_type
+    is '字段控件类型：input-输入框，select-下拉单项选择，tree-下拉选择树，date-日期，daterange-日期范围';
+-- Create/Recreate indexes
+create unique index UK_COLUMN_CODE_TABLE_NAME on T_COLUMN (COLUMN_CODE, TABLE_NAME)
+    tablespace ROOT_SPACE
+    pctfree 10
+    initrans 2
+    maxtrans 255
+    storage
+    (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+    );
+-- Create/Recreate primary, unique and foreign key constraints
+alter table T_COLUMN
+    add constraint PK_T_COLUMN_ID primary key (ID)
+        using index
+            tablespace ROOT_SPACE
+            pctfree 10
+            initrans 2
+            maxtrans 255
+            storage
+            (
+            initial 64K
+            next 1M
+            minextents 1
+            maxextents unlimited
+            );
+
+-- Create table
+create table T_VIEW
+(
+    id                NVARCHAR2(32) default sys_guid() not null,
+    view_code         NVARCHAR2(32) not null,
+    view_name         NVARCHAR2(200),
+    join_on           NVARCHAR2(2000),
+    group_column      NVARCHAR2(1000),
+    filter_where      NVARCHAR2(2000),
+    master_table_name NVARCHAR2(30),
+    java_interface    NVARCHAR2(100),
+    sql_str           CLOB
+)
+    tablespace ROOT_SPACE
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+(
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+);
+-- Add comments to the table
+comment on table T_VIEW
+    is '自定义视图';
+-- Add comments to the columns
+comment on column T_VIEW.id
+    is '主键';
+comment on column T_VIEW.view_code
+    is '视图编码';
+comment on column T_VIEW.view_name
+    is '视图名称';
+comment on column T_VIEW.join_on
+    is '连接条件';
+comment on column T_VIEW.group_column
+    is '分组字段';
+comment on column T_VIEW.filter_where
+    is '过滤条件';
+comment on column T_VIEW.master_table_name
+    is '主表名';
+comment on column T_VIEW.java_interface
+    is '注入java处理接口，应对sql无法处理业务';
+-- Create/Recreate indexes
+create unique index UK_VIEW_CODE on T_VIEW (VIEW_CODE)
+    tablespace ROOT_SPACE
+    pctfree 10
+    initrans 2
+    maxtrans 255
+    storage
+    (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+    );
+-- Create/Recreate primary, unique and foreign key constraints
+alter table T_VIEW
+    add constraint PK_VIEW_ID primary key (ID)
+        using index
+            tablespace ROOT_SPACE
+            pctfree 10
+            initrans 2
+            maxtrans 255
+            storage
+            (
+            initial 64K
+            next 1M
+            minextents 1
+            maxextents unlimited
+            );
+
+-- Create table
+create table T_COLUMN_DEF
+(
+    id           NVARCHAR2(32) not null,
+    column_id    NVARCHAR2(60) not null,
+    show_name    NVARCHAR2(200) not null,
+    sql_function NVARCHAR2(30),
+    sort_order   NUMBER(4),
+    show_code    NVARCHAR2(200) not null,
+    is_show      NUMBER(1) default 1
+)
+    tablespace ROOT_SPACE
+    pctfree 10
+    initrans 1
+    maxtrans 255;
+-- Add comments to the columns
+comment on column T_COLUMN_DEF.column_id
+    is 'T_COLUMN 主键';
+comment on column T_COLUMN_DEF.show_name
+    is '前端展示名称';
+comment on column T_COLUMN_DEF.sql_function
+    is '函数方法';
+comment on column T_COLUMN_DEF.sort_order
+    is '排序字段';
+comment on column T_COLUMN_DEF.show_code
+    is '前端展示代码';
+comment on column T_COLUMN_DEF.is_show
+    is '前端是否显示：1-显示示，0-隐藏';
+-- Create/Recreate primary, unique and foreign key constraints
+alter table T_COLUMN_DEF
+    add constraint COLUMN_ID001 foreign key (COLUMN_ID)
+        references T_COLUMN (ID) on delete set null;
+
+-- Create table
+create table T_VIEW_COLUMN_DEF
+(
+    view_id       NVARCHAR2(32) not null,
+    column_def_id NVARCHAR2(32) not null
+)
+    tablespace ROOT_SPACE
+    pctfree 10
+    initrans 1
+    maxtrans 255;
+-- Add comments to the table
+comment on table T_VIEW_COLUMN_DEF
+    is '视图与字段定义中间表';
+-- Create/Recreate primary, unique and foreign key constraints
+alter table T_VIEW_COLUMN_DEF
+    add constraint PK_VIEW_COLUMN_ID primary key (VIEW_ID, COLUMN_DEF_ID)
+        using index
+            tablespace ROOT_SPACE
+            pctfree 10
+            initrans 2
+            maxtrans 255;
