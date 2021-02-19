@@ -2,7 +2,6 @@ package com.github.rule.engine.controller;
 
 import com.baomidou.mybatisplus.extension.api.R;
 import com.github.rule.engine.dto.ApiViewDTO;
-import com.github.rule.engine.dto.ApplicationTreeView;
 import com.github.rule.engine.service.ViewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;

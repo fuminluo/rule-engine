@@ -511,12 +511,14 @@ create table T_VIEW
     id                NVARCHAR2(32) default sys_guid() not null,
     view_code         NVARCHAR2(32) not null,
     view_name         NVARCHAR2(200),
+    view_type         NVARCHAR2(1),
     join_on           NVARCHAR2(2000),
     group_column      NVARCHAR2(1000),
     filter_where      NVARCHAR2(2000),
     master_table_name NVARCHAR2(30),
     java_interface    NVARCHAR2(100),
     sql_str           CLOB
+
 )
     tablespace ROOT_SPACE
     pctfree 10
@@ -549,6 +551,8 @@ comment on column T_VIEW.master_table_name
     is '主表名';
 comment on column T_VIEW.java_interface
     is '注入java处理接口，应对sql无法处理业务';
+comment on column T_VIEW.view_type
+    is '视图类型：1-普通视图，2-自定义视图';
 -- Create/Recreate indexes
 create unique index UK_VIEW_CODE on T_VIEW (VIEW_CODE)
     tablespace ROOT_SPACE
@@ -643,6 +647,58 @@ comment on table T_VIEW_COLUMN_DEF
 -- Create/Recreate primary, unique and foreign key constraints
 alter table T_VIEW_COLUMN_DEF
     add constraint PK_VIEW_COLUMN_ID primary key (VIEW_ID, COLUMN_DEF_ID)
+        using index
+            tablespace ROOT_SPACE
+            pctfree 10
+            initrans 2
+            maxtrans 255;
+
+-- Create table
+create table T_VIEW_PARAM
+(
+    id           NVARCHAR2(32) not null,
+    param_code   NVARCHAR2(64) not null,
+    param_type   NVARCHAR2(32) not null,
+    table_column NVARCHAR2(60) not null,
+    is_required  NVARCHAR2(1) not null,
+    default_var  CLOB,
+    operate      NVARCHAR2(30),
+    warning_msg  NVARCHAR2(500),
+    view_id      NVARCHAR2(32)
+)
+    tablespace ROOT_SPACE
+    pctfree 10
+    initrans 1
+    maxtrans 255;
+-- Add comments to the table
+comment on table T_VIEW_PARAM
+    is '视图参数';
+-- Add comments to the columns
+comment on column T_VIEW_PARAM.param_code
+    is '参数编码';
+comment on column T_VIEW_PARAM.param_type
+    is '参数类型：N-数值，C-金额，I-整数，S-字符串，D-日期';
+comment on column T_VIEW_PARAM.table_column
+    is '表字段';
+comment on column T_VIEW_PARAM.is_required
+    is '是否必填：0-非必填，1-必填';
+comment on column T_VIEW_PARAM.default_var
+    is '参数默认值';
+comment on column T_VIEW_PARAM.operate
+    is '操作符';
+comment on column T_VIEW_PARAM.warning_msg
+    is '警告语';
+comment on column T_VIEW_PARAM.view_id
+    is '视图id';
+-- Create/Recreate indexes
+create index NK_PARAM_VIEW_ID on T_VIEW_PARAM (VIEW_ID)
+    tablespace ROOT_SPACE
+    pctfree 10
+    initrans 2
+    maxtrans 255;
+-- Create/Recreate primary, unique and foreign key constraints
+alter table T_VIEW_PARAM
+    add constraint PK_T_VIEW_PARAM_ID primary key (ID)
         using index
             tablespace ROOT_SPACE
             pctfree 10

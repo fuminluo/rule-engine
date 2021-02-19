@@ -1,6 +1,7 @@
 package com.github.rule.engine.service.impl;
 
 import com.github.rule.engine.service.CustomRowHandler;
+import com.github.rule.engine.utils.StrUtils;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.lang.Nullable;
@@ -18,9 +19,6 @@ import java.util.Map;
 public class MyColumnMapRowMapper<T> implements RowMapper<Map<String, Object>> {
 
     private CustomRowHandler customRowHandler;
-
-    public MyColumnMapRowMapper() {
-    }
 
     public MyColumnMapRowMapper(CustomRowHandler customRowHandler) {
         this.customRowHandler = customRowHandler;
@@ -44,6 +42,8 @@ public class MyColumnMapRowMapper<T> implements RowMapper<Map<String, Object>> {
             String column = JdbcUtils.lookupColumnName(rsmd, i);
             String columnKey = this.getColumnKey(column);
             Object columnValue = this.getColumnValue(rs, i);
+            //默认开启下划线转驼峰
+            columnKey = StrUtils.lineToHump(columnKey);
             //自定义数据处理
             if (null != customRowHandler) {
                 customRowHandler.customRowHandler(mapOfColumnValues, columnKey, columnValue);
