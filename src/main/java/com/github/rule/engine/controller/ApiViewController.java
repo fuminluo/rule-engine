@@ -26,7 +26,7 @@ public class ApiViewController {
      * @return List<ApplicationTreeView>
      */
     @PostMapping("/data")
-    public R<?> findData(@RequestBody @Validated ApiViewDTO apiViewDTO) {
+    public R<?> findData(@RequestBody @Validated ApiViewDTO apiViewDTO) throws IllegalAccessException, InstantiationException, ClassNotFoundException {
         return R.ok(viewService.findData(apiViewDTO));
     }
 

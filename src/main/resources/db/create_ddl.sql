@@ -435,6 +435,7 @@ alter table T_OBJECT_DATA_MAPPING
             );
 
 
+
 -- Create table
 create table T_COLUMN
 (
@@ -581,24 +582,28 @@ alter table T_VIEW
 -- Create table
 create table T_COLUMN_DEF
 (
-    id           NVARCHAR2(32) not null,
-    column_id    NVARCHAR2(60) not null,
-    show_name    NVARCHAR2(200) not null,
-    sql_function NVARCHAR2(30),
-    order_sort   NUMBER(4),
-    show_code    NVARCHAR2(200) not null,
-    is_show      NUMBER(1) default 1
+    id          NVARCHAR2(32) not null,
+    column_id   NVARCHAR2(60) not null,
+    show_name   NVARCHAR2(200) not null,
+    show_code   NVARCHAR2(200) not null,
+    sql_func    NVARCHAR2(30),
+    order_sort  NUMBER(4),
+    is_show     NUMBER(1) default 1,
+    default_var CLOB,
+    operate     NVARCHAR2(30)
 )
     tablespace ROOT_SPACE
     pctfree 10
     initrans 1
     maxtrans 255;
 -- Add comments to the columns
+comment on column T_COLUMN_DEF.id
+    is '主键';
 comment on column T_COLUMN_DEF.column_id
     is 'T_COLUMN 主键';
 comment on column T_COLUMN_DEF.show_name
     is '前端展示名称';
-comment on column T_COLUMN_DEF.sql_function
+comment on column T_COLUMN_DEF.sql_func
     is '函数方法';
 comment on column T_COLUMN_DEF.order_sort
     is '排序字段';
@@ -606,6 +611,10 @@ comment on column T_COLUMN_DEF.show_code
     is '前端展示代码';
 comment on column T_COLUMN_DEF.is_show
     is '前端是否显示：1-显示示，0-隐藏';
+comment on column T_COLUMN_DEF.default_var
+    is '默认变量';
+comment on column T_COLUMN_DEF.operate
+    is '操作符';
 -- Create/Recreate indexes
 create index ORDER_SORT01 on T_COLUMN_DEF (ORDER_SORT)
     tablespace ROOT_SPACE

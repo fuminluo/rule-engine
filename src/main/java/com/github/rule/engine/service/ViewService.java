@@ -11,5 +11,5 @@ import java.util.List;
  * @since 2021-02-07 17:27:06
  */
 public interface ViewService {
-    Object findData(ApiViewDTO apiViewDTO);
+    Object findData(ApiViewDTO apiViewDTO) throws ClassNotFoundException, IllegalAccessException, InstantiationException;
 }

@@ -1,5 +1,7 @@
 package com.github.rule.engine.service.impl;
 
+import com.github.rule.engine.service.CustomListHandler;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.util.Assert;
@@ -13,13 +15,18 @@ import java.util.List;
  * @Author LuoFuMin
  * @DATE 2021/2/7 19:57
  */
+@Log4j2
 public class MyRowMapperResultSetExtractor<T> implements ResultSetExtractor<List<T>> {
 
-    private final RowMapper<T> rowMapper;
-    private final int rowsExpected;
+    private RowMapper<T> rowMapper;
 
-    public MyRowMapperResultSetExtractor(RowMapper<T> rowMapper) {
+    private int rowsExpected;
+
+    private CustomListHandler<T> customListHandler;
+
+    public MyRowMapperResultSetExtractor(RowMapper<T> rowMapper, CustomListHandler<T> customListHandler) {
         this(rowMapper, 0);
+        this.customListHandler = customListHandler;
     }
 
     public MyRowMapperResultSetExtractor(RowMapper<T> rowMapper, int rowsExpected) {
@@ -36,9 +43,11 @@ public class MyRowMapperResultSetExtractor<T> implements ResultSetExtractor<List
         while (rs.next()) {
             results.add(this.rowMapper.mapRow(rs, var3++));
         }
-
+        //对 results 进行处理
+        if (null != customListHandler) {
+            return customListHandler.customListHandler(results);
+        }
         return results;
     }
-
 
 }
