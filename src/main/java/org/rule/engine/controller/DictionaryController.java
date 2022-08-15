@@ -5,7 +5,9 @@ import org.rule.engine.base.ResultInfo;
 import org.rule.engine.dto.ElementDTO;
 import org.rule.engine.service.DictionaryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
@@ -28,7 +30,7 @@ public class DictionaryController {
 
 
     @PostMapping("/tree")
-    public ResultInfo<?> treeList(ElementDTO elementDTO){
+    public ResultInfo<?> treeList(@Validated @RequestBody ElementDTO elementDTO){
        return ResultInfo.OK(dictionaryService.treeList(elementDTO));
     }
 
